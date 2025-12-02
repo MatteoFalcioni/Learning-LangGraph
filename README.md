@@ -4,6 +4,10 @@ An intermediate-level, comprehensive LangGraph course, focusing on practical use
 
 ## Setup
 
+**NOTE:** If your intention is to only work on Google Colab - at least for the first part of the course - you can skip the virtual environment creation and go straight to [setting up env variables](./README.md#setting-up-env-variables). 
+
+Still, the creation of a local virtual environment will be needed later on.
+
 ### Python version
 
 Make sure you're using Python version 3.11, 3.12, or 3.13.
@@ -53,7 +57,7 @@ In Google Colab, follow these steps:
 4. Toggle the button on the left to allow all notebooks access to the secret. 
 
 ##### Jupyter Notebooks or Python files
-If we are using a generic notebook with jupyter, or if we are working with `.py` files, I recommend writing a `.env` file at your project root. 
+If we are using a generic local notebook with Jupyter, or if we are working with `.py` files, I recommend writing a `.env` file at your project root. 
 
 **This `.env` file must be added to your `.gitignore` file so that you do not accidentally commit your secrets to GitHub** 
 
@@ -78,7 +82,6 @@ import os
 load_dotenv()
 openai_api_key = os.environ['OPENAI_API_KEY']  # or os.getenv('OPENAI_API_KEY')
 ```
-
 
 ### Set OpenAI API key
 * If you don't have an OpenAI API key, you can sign up [here](https://openai.com/index/openai-api/).
