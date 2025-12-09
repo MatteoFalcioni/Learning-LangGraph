@@ -12,3 +12,4 @@ langchain-tavily
 wikipedia
 trustcall
 dotenv
+e2b-code-interpreter
