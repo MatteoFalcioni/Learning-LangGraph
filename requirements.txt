@@ -10,6 +10,7 @@ langchain-core
 langchain-openai
 langchain-anthropic
 langchain-tavily
+langchain-google-community[gmail,calendar]
 
 tavily
 markdownify

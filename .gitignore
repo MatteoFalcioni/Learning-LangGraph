@@ -1,2 +1,5 @@
 index.md
+*pycache*
 *.env
+credentials.json
+token.json
