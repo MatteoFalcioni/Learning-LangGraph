@@ -3,7 +3,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 import asyncio
 from dotenv import load_dotenv
 
-from .graph.graph import make_graph
+from graph.graph import make_graph
 
 async def main():
 

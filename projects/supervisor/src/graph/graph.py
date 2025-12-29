@@ -5,24 +5,22 @@ from langgraph.graph import StateGraph, START
 from langchain.agents.middleware import SummarizationMiddleware, TodoListMiddleware
 from langchain_core.messages import HumanMessage
 
-import os
-from pydantic import SecretStr
 from typing_extensions import Literal
 from dotenv import load_dotenv
 from datetime import datetime
 from pathlib import Path
 
-from tools.handoffs import handoff_to_gmail_agent, handoff_to_calendar_agent, handoff_to_github_agent
-from tools.mcp import GitHubMCPTools
-from tools.google_tools import gmail_tools, calendar_tools
-from prompts.supervisor import supervisor_prompt
-from prompts.mail import gmail_prompt
-from prompts.calendar import calendar_prompt
-from prompts.github import github_prompt
+from graph.tools.handoffs import handoff_to_gmail_agent, handoff_to_calendar_agent, handoff_to_github_agent
+from graph.tools.mcp import GitHubMCPTools
+from graph.tools.google_tools import gmail_tools, calendar_tools
+from graph.prompts.supervisor import supervisor_prompt
+from graph.prompts.mail import gmail_prompt
+from graph.prompts.calendar import calendar_prompt
+from graph.prompts.github import github_prompt
 
 load_dotenv()
 
-def make_graph(
+async def make_graph(
     checkpointer=None,
     plot_graph=False,
 ):
@@ -50,9 +48,10 @@ def make_graph(
         tools=calendar_tools,
         system_prompt=calendar_prompt,
     )
+    github_tools = await GitHubMCPTools().get_tools() # list of tools
     github_agent = create_agent(
         model=llm,
-        tools=[GitHubMCPTools().get_tools()],
+        tools=github_tools,
         system_prompt=github_prompt,
     )
 
@@ -117,12 +116,19 @@ def make_graph(
 
 if __name__ == '__main__':
 
+    import asyncio
     from langgraph.checkpoint.memory import InMemorySaver
 
-    print("Initializing graph...")
+    async def main():
 
-    checkpointer = InMemorySaver()
+        print("Initializing graph...")
 
-    graph = make_graph(checkpointer=checkpointer, plot_graph=True)
+        checkpointer = InMemorySaver()
 
-    print("Graph Initialized...")
+        graph = await make_graph(checkpointer=checkpointer, plot_graph=True)
+
+        print("Graph Initialized...")
+
+        return graph
+    
+    graph = asyncio.run(main())
