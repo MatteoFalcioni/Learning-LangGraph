@@ -2,6 +2,8 @@ from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 import asyncio
 from dotenv import load_dotenv
+from display_utils import console, rich_print
+from rich.panel import Panel
 
 from graph.graph import make_graph
 
@@ -17,24 +19,26 @@ async def main():
 
     config = {"thread_id": "1"}
     
-    print("\n" + "="*60)
-    print("Interactive Chat")
-    print("Type 'exit' or 'quit' to end the session")
-    print("="*60 + "\n")
+    # Pretty header
+    console.print("\n", Panel.fit(
+        "[bold cyan]🤖 Interactive Supervisor Agent[/bold cyan]",
+        border_style="cyan"
+    ))
+    console.print("[dim]Type 'exit' or 'quit' to end the session[/dim]\n")
 
     while True:
         # Get user input
         try:
-            user_input = input("You: ").strip()
+            user_input = console.input("[bold blue]You:[/bold blue] ").strip()
         except (EOFError, KeyboardInterrupt):
-            print("\n\nExiting chat...")
+            console.print("\n\n[dim]Exiting chat...[/dim]")
             break
         
         if not user_input:
             continue
             
         if user_input.lower() in ['exit', 'quit']:
-            print("\nExiting chat...")
+            console.print("\n[dim]Exiting chat...[/dim]")
             break
         
         # Create state with user message
@@ -44,11 +48,11 @@ async def main():
         async for chunk in graph.astream(state, config=config):
             for node_name, values in chunk.items():
                 if 'messages' in values:
-                    print("\n" + "*"*25 + f" {node_name} " + "*"*25 +"\n")
                     msg = values['messages'][-1] if isinstance(values['messages'], list) else values['messages']
-                    print(msg.content)
+                    rich_print(msg.content, node_name)
         
-        print("\n" + "*"*62 +"\n")  # Add spacing between conversations
+        # Separator
+        console.print("\n" + "─" * 62 + "\n", style="dim")
 
 if __name__ == "__main__":
     asyncio.run(main())

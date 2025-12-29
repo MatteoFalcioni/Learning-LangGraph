@@ -29,10 +29,11 @@ async def make_graph(
     """
 
     # ======= SUPERVISOR =======
-    llm = ChatOpenAI(model="gpt-4o")
+    supervisor_llm = ChatOpenAI(model="gpt-4.1")
+    llm = ChatOpenAI(model="gpt-4o-mini")
 
     supervisor_agent = create_agent(
-        model=llm,
+        model=supervisor_llm,
         tools=[handoff_to_gmail_agent, handoff_to_calendar_agent, handoff_to_github_agent],
         system_prompt=supervisor_prompt,
     )
