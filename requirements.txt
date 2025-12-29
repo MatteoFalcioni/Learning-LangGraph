@@ -11,6 +11,7 @@ langchain-openai
 langchain-anthropic
 langchain-tavily
 langchain-google-community[gmail,calendar]
+langchain-mcp-adapters
 
 tavily
 markdownify
