@@ -1,7 +1,18 @@
 from langchain_google_community import GmailToolkit, CalendarToolkit
+from langchain_google_community.calendar.utils import get_google_credentials
 
-gmail_toolkit = GmailToolkit()
-calendar_toolkit = CalendarToolkit()
+# Can review scopes here: https://developers.google.com/calendar/api/auth
+# For instance, readonly scope is https://www.googleapis.com/auth/calendar.readonly
+google_credentials = get_google_credentials(
+    token_file="token.json",
+    scopes=["https://mail.google.com/", "https://www.googleapis.com/auth/calendar"],
+    client_secrets_file="credentials.json",
+)
+
+# Initialize Toolkits
+calendar_toolkit = CalendarToolkit(credentials=google_credentials)
+
+gmail_toolkit = GmailToolkit(credentials=google_credentials)
 
 # Filter out the email sending tool - only allow reading/searching/creating drafts
 gmail_tools = [

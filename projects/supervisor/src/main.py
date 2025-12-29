@@ -11,7 +11,7 @@ async def main():
 
     checkpointer = InMemorySaver()
 
-    graph = make_graph(
+    graph = await make_graph(
         checkpointer=checkpointer
     )
 
@@ -44,10 +44,11 @@ async def main():
         async for chunk in graph.astream(state, config=config):
             for node_name, values in chunk.items():
                 if 'messages' in values:
-                    print("\n" + "*"*25 + f" {node_name} " + "*"*25)
-                    values['messages'][-1].pretty_print()
+                    print("\n" + "*"*25 + f" {node_name} " + "*"*25 +"\n")
+                    msg = values['messages'][-1] if isinstance(values['messages'], list) else values['messages']
+                    print(msg.content)
         
-        print()  # Add spacing between conversations
+        print("\n" + "*"*62 +"\n")  # Add spacing between conversations
 
 if __name__ == "__main__":
     asyncio.run(main())

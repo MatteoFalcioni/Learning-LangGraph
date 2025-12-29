@@ -12,3 +12,10 @@ For details on MCP servers (used for the github agent) and handoff tools (used f
 <center>
     <img src="./src/graph/graph_plot/supervised_20251229_163528.png" width="600">
 <center>
+
+Notice that to build this exact same project you will need google API keys and permissions and a GitHub token. 
+
+To get those, check these links:
+
+- https://docs.langchain.com/oss/python/integrations/tools/google_gmail#setup
+- https://github.com/github/github-mcp-server

@@ -17,17 +17,13 @@ def create_handoff_tool(
         runtime: ToolRuntime,
     ) -> Command:
 
-        tool_msg = ToolMessage(
-            content=f"Successfully transferred to {agent_name}",
-            tool_call_id=runtime.tool_call_id,
-        )
         task_msg = HumanMessage(
             content=f"The agent supervisor advices you to perform the following task : \n{task}"
         )
 
         return Command(
             goto=agent_name,
-            update={"messages": [tool_msg] + [task_msg]},
+            update={"messages": [task_msg]},
             graph=Command.PARENT,
         )
 
