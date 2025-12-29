@@ -2,10 +2,30 @@ from langchain_google_community import GmailToolkit, CalendarToolkit
 
 gmail_toolkit = GmailToolkit()
 calendar_toolkit = CalendarToolkit()
-google_tools = gmail_toolkit.get_tools() + calendar_toolkit.get_tools()
+
+# Filter out the email sending tool - only allow reading/searching/creating drafts
+gmail_tools = [
+    tool for tool in gmail_toolkit.get_tools() 
+    if tool.name != "send_gmail_message"
+]
+
+# Filter calendar tools to only include: CalendarCreateEvent, CalendarSearchEvents, GetCalendarsInfo, GetCurrentDatetime
+allowed_calendar_tools = [
+    "create_calendar_event",
+    "search_events", 
+    "get_calendars_info",
+    "get_current_datetime"
+]
+
+calendar_tools = [
+    tool for tool in calendar_toolkit.get_tools()
+    if tool.name in allowed_calendar_tools
+]
+
+google_tools = gmail_tools + calendar_tools
 
 if __name__ == "__main__":
-    print(google_tools)
+    print([tool.name for tool in google_tools])
 
 '''
 [GmailCreateDraft(api_resource=<googleapiclient.discovery.Resource object at 0x7c47478d6350>), 
