@@ -1,10 +1,12 @@
 from langgraph_cua import create_cua
 from dotenv import load_dotenv
 
+from utils import plot_graph
+
 # Load environment variables from .env file
 load_dotenv()
 
-cua_graph = create_cua()
+cua_graph = create_cua()   # https://github.com/langchain-ai/langgraph-cua-py
 
 # Define the input messages
 messages = [
@@ -24,6 +26,9 @@ messages = [
 ]
 
 async def main():
+    # Plot the graph
+    plot_graph(cua_graph, "cua")
+
     # Stream the graph execution
     stream = cua_graph.astream(
         {"messages": messages},
@@ -42,4 +47,5 @@ async def main():
 
 if __name__ == "__main__":
     import asyncio
+    
     asyncio.run(main())
