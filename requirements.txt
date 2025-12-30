@@ -19,3 +19,4 @@ deepagents
 trustcall
 dotenv
 e2b-code-interpreter
+rich
