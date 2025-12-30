@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-
 cua_graph = create_cua()
 
 # Define the input messages
