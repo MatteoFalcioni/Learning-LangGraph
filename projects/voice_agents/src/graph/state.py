@@ -5,6 +5,6 @@ from typing import Annotated
 class MyState(AgentState):
     """
     State for the graph.
-    Articles will be a list of article id's. It will store the downloaded articles.
+    bookmarked_articles will be a list of article id's. It will store the bookmarked articles.
     """
-    articles: Annotated[list, add] 
+    bookmarked_articles: Annotated[list, add] 

@@ -1,26 +1,51 @@
-from arxiv_helpers.arxiv import search_arxiv, download_arxiv_pdf, read_pdf_text
+from arxiv_helpers.arxiv_functions import search_arxiv_fn, download_arxiv_pdf, read_arxiv_in_memory, get_paper_metadata
 from langchain_core.tools import tool
 from langgraph.types import Command
 from typing import Annotated
 import os
+from langchain.tools import ToolRuntime
+from langchain.messages import ToolMessage
 
 @tool
 def search_arxiv(query: Annotated[str, "The query to search in arXiv with"]):
     """
     Search arXiv for papers.
     """
-    return search_arxiv(query)
+    return search_arxiv_fn(query)
 
 @tool
-def download_arxiv_pdf(paper_id: Annotated[str, "The ID of the paper to download from the arXiv"]) -> Command:
+def mark_as_relevant(
+    paper_id: Annotated[str, "The ID of the paper to mark as relevant"],
+    runtime: ToolRuntime
+) -> Command:
     """
-    Download the PDF of a paper from the arXiv.
+    Mark a paper as relevant.
     """
-    # here we use Command because we need to act on state with an update
-    # (1) download
-    download_arxiv_pdf(paper_id)
-    # (2) add id to list in state 
-    return
+    # here we use command because we add the paper_id to state 
+    metadata = get_paper_metadata(paper_id)
+    # if metadata is a dict it worked, otherwise it's an error message
+    if isinstance(metadata, dict):
+        # add the paper_id to the list of bookmarked articles
+        print(f"Marked paper with id {paper_id} (title: {metadata['title']}) as relevant")
+        return Command(
+            update={
+                    "messages" : [ToolMessage(content=f"Succesfully marked paper with id {paper_id} (title: {metadata['title']}) as relevant", tool_call_id=runtime.tool_call_id)],
+                    "bookmarked_articles" : [paper_id]
+                }
+        )
+    else:
+        return Command(
+            update={
+                "messages" : [ToolMessage(content=metadata, tool_call_id=runtime.tool_call_id)],
+            }
+        )
+
+@tool
+def download_pdf(paper_id: Annotated[str, "The ID of the paper to download from the arXiv"]):
+    """
+    Download the PDF of a paper from arXiv, given its ID.
+    """
+    return download_arxiv_pdf(paper_id)
 
 @tool
 def list_downloads():
@@ -30,8 +55,14 @@ def list_downloads():
     return os.listdir("./downloads")
 
 @tool
-def read_pdf_text(filepath: Annotated[str, "The path to the PDF file to read"]):
+def read_by_page(
+    paper_id: Annotated[str, "The ID of the paper to read from arXiv"], 
+    start_page: Annotated[int, "The starting page to read"], 
+    end_page: Annotated[int, "The ending page to read"]
+):
     """
-    Read the text from a PDF file.
+    Read the text from a paper from the arXiv, given its ID.
     """
-    return read_pdf_text(filepath)
+    return read_arxiv_in_memory(paper_id, start_page, end_page)
+
+arxiv_tools = [search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page]

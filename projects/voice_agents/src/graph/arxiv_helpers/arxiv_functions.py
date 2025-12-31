@@ -2,8 +2,9 @@ import arxiv
 from typing import Literal
 import os
 import pymupdf
+import requests
 
-def search_arxiv(
+def search_arxiv_fn(
     query: str, 
     max_results: int = 10, 
     sort_criterion : Literal['relevance', 'last_submitted'] = 'relevance'
@@ -48,6 +49,33 @@ def search_arxiv(
         
     return results
 
+def get_paper_metadata(paper_id : str):
+    """
+    Gets the metadata of an arXiv paper given its ID.
+    Returns a dictionary containing the paper ID, title, summary, and authors.
+    
+    Args:
+        paper_id (str): The arXiv ID (e.g., "2103.00020").
+    
+    Returns:
+        dict: A dictionary containing the paper ID, title, summary, and authors.
+    """
+    client = arxiv.Client()
+    try:
+        search = arxiv.Search(id_list=[paper_id])
+        paper = next(client.results(search))
+        
+        return {
+            "id": paper.entry_id.split('/')[-1],
+            "title": paper.title,
+            "summary": paper.summary.replace("\n", " "),
+            "authors": [author.name for author in paper.authors]
+        }
+    
+    except StopIteration:
+        return f"Error: Paper {paper_id} not found."
+    except Exception as e: # Catch network/API errors
+        return f"Error fetching paper metadata: {e}"
 
 def download_arxiv_pdf(paper_id: str, save_dir: str = "./downloads"):
     """
@@ -86,14 +114,45 @@ def download_arxiv_pdf(paper_id: str, save_dir: str = "./downloads"):
     except Exception as e:
         return f"Error downloading paper: {str(e)}"
 
+def read_arxiv_in_memory(paper_id: str, start_page: int = 1, end_page: int = 3):
+    """
+    Downloads an arXiv paper and returns text from specific pages.
+    Use this to read sections without loading the entire document.
+    
+    Args:
+        paper_id (str): The arXiv ID (e.g., "2103.00020").
+        start_page (int): The first page to read (1-based index). Default is 1.
+        end_page (int): The last page to read (1-based index). Default is 3.
+    """
+    # 1. Fetch PDF URL
+    client = arxiv.Client()
+    try:
+        paper = next(client.results(arxiv.Search(id_list=[paper_id])))
+        pdf_url = paper.pdf_url
+    except StopIteration:
+        return f"Error: Paper {paper_id} not found."
 
-def read_pdf_text(filepath: str):
-    """
-    Reads the text from a PDF file.
-    """
-    with open(filepath, 'rb') as file:
-        reader = pymupdf.open(file)
-        text = ""
-        for page in reader:
-            text += page.get_text()
-        return text
+    # 2. Download to RAM
+    try:
+        response = requests.get(pdf_url)
+        response.raise_for_status()
+        
+        # 3. Open PDF stream
+        with pymupdf.open(stream=response.content, filetype="pdf") as doc:
+            num_pages = len(doc)
+            
+            # Validate page numbers
+            if start_page < 1: start_page = 1
+            if end_page > num_pages: end_page = num_pages
+            
+            # Convert to 0-based index for PyMuPDF
+            # We iterate only the requested range
+            text_content = []
+            for i in range(start_page - 1, end_page):
+                page_text = doc[i].get_text()
+                text_content.append(f"--- Page {i+1} ---\n{page_text}")
+            
+            return "\n".join(text_content)
+
+    except Exception as e:
+        return f"Error reading paper: {e}"
