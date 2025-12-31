@@ -8,6 +8,6 @@ Using Deepgram we can directly stream and reduce latency: Whisper needs files to
 
 Key differences: 
 
-- Deepgram Nova3: streaming transcription model, efficient
-- Deepgram Flux: AI transcription model, automatically detects pauses: perfect for voice agents
-- OpenAI's Whisper: hig accuracy, does not stream -> high latency
+- Deepgram `Nova3`: streaming transcription model, efficient
+- Deepgram `Flux`: AI transcription model, automatically detects pauses: perfect for voice agents
+- OpenAI's `Whisper`: high accuracy, does not stream -> high latency

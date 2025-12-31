@@ -7,9 +7,9 @@ import pyaudio
 
 # ------------------------------------------------------------
 # Example ending the recording manually from the command line
+# https://playground.deepgram.com/?endpoint=listen-streaming&endpointing=false&language=en&model=nova-3
 # ------------------------------------------------------------
 
-# Set your key here or in .env
 load_dotenv()
 API_KEY = os.getenv("DEEPGRAM_API_KEY")
 if not API_KEY:

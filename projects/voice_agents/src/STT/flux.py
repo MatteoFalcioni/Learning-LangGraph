@@ -10,6 +10,7 @@ from queue import Queue
 # ---------------------------------------------------------------
 # Example of using Flux for STT : 
 # automatically ends the recording when the user stops speaking
+# We will use this implementation 
 # --------------------------------------------------------------
 
 # Set your key here or in .env
@@ -18,7 +19,46 @@ API_KEY = os.getenv("DEEPGRAM_API_KEY")
 if not API_KEY:
     raise ValueError("DEEPGRAM_API_KEY is not set")
 
-async def main():
+async def stream_graph_task(graph, transcript, config=None, system_message=None):
+    """
+    Stream the graph execution with the user transcript.
+    Will be used in the flux_stt function to stream the graph execution with the user transcript.
+    Args:
+        graph: The compiled StateGraph to stream.
+        transcript: The user transcript to stream.
+        config: The config to use for the graph.
+        system_message: Optional system message to prepend to each transcript.
+    """
+    try:
+        print(f"\n🤖 Processing: '{transcript}'")
+        
+        # Build messages list
+        messages = []
+        if system_message:
+            messages.append({"role": "system", "content": system_message})
+        messages.append({"role": "user", "content": transcript})
+        
+        async for event in graph.astream(
+            {"messages": messages},
+            config=config,
+            stream_mode="updates"
+        ):
+            # Print each node's output as it streams
+            for node_name, node_output in event.items():
+                print(f"[{node_name}]\n\n {node_output}\n\n")
+    except Exception as e:
+        print(f"❌ [Graph Error] {e}")
+
+
+async def flux_stt(graph=None, config=None, system_message=None):
+    """
+    Flux STT (by Deepgram) implementation that streams graph execution on each turn.
+    Automatically ends the recording when the user stops speaking.
+    Args:
+        graph: The compiled StateGraph to stream.
+        config: The config to use for the graph. Defaults to None.
+        system_message: Optional system message to prepend to each transcript. Defaults to None.
+    """
     client = AsyncDeepgramClient(api_key=API_KEY)
 
     # Audio settings - using ~80ms chunks for optimal Flux performance
@@ -79,11 +119,15 @@ async def main():
                     if hasattr(message, 'transcript') and message.transcript:
                         transcript = message.transcript.strip()
                         print(f"✓ Transcript: '{transcript}'")
-                        print("--- Turn Ended. Invoking LangGraph... ---")
-                        # result = langgraph_app.invoke({"input": transcript})
-                        # Reset transcript for next turn
-                        transcript = ""
+                        
+                        if graph:
+                            # Run graph in async task so it doesn't block audio streaming
+                            asyncio.create_task(
+                                stream_graph_task(graph, transcript, config, system_message)
+                            )
 
+                        transcript = ""
+                        
         # Register handlers
         connection.on(EventType.MESSAGE, on_flux_message)
         connection.on(EventType.ERROR, lambda error: print(f"Error: {error}"))
@@ -118,4 +162,4 @@ async def main():
 
 if __name__ == "__main__":
     # close with ctrl+c
-    asyncio.run(main())
+    asyncio.run(flux_stt())

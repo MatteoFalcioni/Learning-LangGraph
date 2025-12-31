@@ -1,4 +1,5 @@
-langgraph-cua==0.0.1
 dotenv
 deepgram
 pyaudio
+arxiv
+pymupdf
