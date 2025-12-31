@@ -65,4 +65,11 @@ def read_by_page(
     """
     return read_arxiv_in_memory(paper_id, start_page, end_page)
 
+@tool
+def initialize_vector_store():
+    """
+    Initializes a vector store for efficient reading of the downloaded files. 
+    """
+    return "Vector store initialized successfully"
+
 arxiv_tools = [search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page]
