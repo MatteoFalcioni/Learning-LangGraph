@@ -116,6 +116,7 @@ async def stream_graph_task(graph, transcript, config=None, pending_interrupt=No
         # After streaming completes, check if graph is interrupted
         state_snapshot = graph.get_state(config)
         if state_snapshot.next:  # If there's a next step, it means we're interrupted
+            # could check interrupt flag here too but its the same thing
             console.print(f"\n[bold yellow]⚠️  Graph interrupted! Waiting for your approval to download the paper. Approve by saying 'yes', reject by saying 'no'[/bold yellow]")
             console.print(f"[bold cyan]💬 Say 'yes' or 'no' to continue...[/bold cyan]")
             if pending_interrupt:

@@ -37,7 +37,7 @@ Example 1:
   5. "Games for Artificial Intelligence Research: A Review and Perspectives" — reviews games as testbeds for AI
   research.
 </info>
-  Would you like me to mark any of these or other specific topics for a deeper look?"
+  Would you like me to mark any of these topics for a deeper look?"
 
 Notice that the final line - which is a proactive question to the user - is not encapsulated.
 
@@ -60,7 +60,7 @@ Example 2:
     - Key Results: GG-Transformer achieves consistently superior performance over prior state-of-the-art vision transformers on tasks such as image classification (ImageNet), object detection (COCO), and semantic segmentation (ADE20K), demonstrating efficiency and better accuracy.
     </info>
 
-    Would you like a deeper dive into their methodologies or results, or perhaps look for more papers on Transformers in other domains?  
+    Would you like a deeper dive into their methodologies or results?
 
 Again, notice that the final line - which is a proactive question to the user - is not encapsulated.
 

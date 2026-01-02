@@ -10,3 +10,4 @@ langchain
 langgraph
 langchain-openai
 huggingface-hub
+kokoro_onnx
