@@ -7,11 +7,12 @@ from langchain.tools import ToolRuntime
 from langchain.messages import ToolMessage
 
 @tool
-def search_arxiv(query: Annotated[str, "The query to search in arXiv with"]):
+def search_arxiv(query: Annotated[str, "The query to search in arXiv with"], max_results: Annotated[int, "The maximum number of results to return"] = 10):
     """
     Search arXiv for papers.
     """
-    return search_arxiv_fn(query)
+    print(f"Searching arXiv for papers...")
+    return search_arxiv_fn(query, max_results)
 
 @tool
 def mark_as_relevant(
@@ -21,16 +22,16 @@ def mark_as_relevant(
     """
     Mark a paper as relevant.
     """
-    # here we use command because we add the paper_id to state 
+    # here we use command because we add the paper to state 
     metadata = get_paper_metadata(paper_id)
     # if metadata is a dict it worked, otherwise it's an error message
     if isinstance(metadata, dict):
-        # add the paper_id to the list of bookmarked articles
-        print(f"Marked paper with id {paper_id} (title: {metadata['title']}) as relevant")
+        # add the paper to the list of bookmarked articles
+        print(f"Marked paper {metadata['title']} (id: {paper_id}) as relevant")
         return Command(
             update={
-                    "messages" : [ToolMessage(content=f"Succesfully marked paper with id {paper_id} (title: {metadata['title']}) as relevant", tool_call_id=runtime.tool_call_id)],
-                    "bookmarked_articles" : [paper_id]
+                    "messages" : [ToolMessage(content=f"Succesfully marked paper {metadata['title']} (id: {paper_id}) as relevant", tool_call_id=runtime.tool_call_id)],
+                    "bookmarked_articles" : [{'title': metadata['title'], 'id': paper_id}]
                 }
         )
     else:
@@ -56,7 +57,7 @@ def list_marked_articles(runtime: ToolRuntime) -> Command:
     """
     return Command(
         update={
-            "messages" : [ToolMessage(content=f"The marked articles are: {runtime.state['bookmarked_articles']}", tool_call_id=runtime.tool_call_id)]
+            "messages" : [ToolMessage(content=f"The marked articles are: {runtime.state.get('bookmarked_articles', [])}", tool_call_id=runtime.tool_call_id)]
         }
     )
 
@@ -76,6 +77,7 @@ def read_by_page(
     """
     Read the text from a paper from the arXiv, given its ID.
     """
+    print(f"Reading papers...")
     return read_arxiv_in_memory(paper_id, start_page, end_page)
 
 @tool
