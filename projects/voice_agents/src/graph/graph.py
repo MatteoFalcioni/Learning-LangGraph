@@ -9,9 +9,9 @@ from langchain.agents.middleware import HumanInTheLoopMiddleware
 
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
-from prompt import arxiv_prompt
-from tools import arxiv_tools
-from state import MyState
+from graph.prompt import arxiv_prompt
+from graph.tools import arxiv_tools
+from graph.state import MyState
 
 async def make_graph(
     checkpointer=None,
@@ -25,10 +25,11 @@ async def make_graph(
     # ======= ARXIV =======
 
     # grok fast if openrouter is available, otherwise gpt-4.1-mini
-    if os.getenv['OPENROUTER_API_KEY']:
+    if os.getenv('OPENROUTER_API_KEY'):
         # https://openrouter.ai/qwen/qwen3-coder/providers
+        model="x-ai/grok-4.1-fast"
         arxiv_llm = ChatOpenAI(
-            model="qwen/qwen3-coder-flash", 
+            model=model, 
             
             # redirect LangChain to OpenRouter
             base_url="https://openrouter.ai/api/v1",
@@ -36,17 +37,20 @@ async def make_graph(
             # pass the OpenRouter key
             api_key=SecretStr(os.environ["OPENROUTER_API_KEY"])
         )
-    elif os.getenv['OPENROUTER_API_KEY']:
-        arxiv_llm = ChatOpenAI(model="gpt-4.1-mini")
+    elif os.getenv('OPENAI_API_KEY'):
+        model = "gpt-4.1-mini"
+        arxiv_llm = ChatOpenAI(model=model)
     else:
         raise RuntimeError(f"No OpenRouter or OpenAI API keys provided. Provide at least one in your .env file")
+
+    print(f"\n--- Using model : {model} ---")
 
     arxiv_agent = create_agent(
         model=arxiv_llm,
         tools=arxiv_tools,
         system_prompt=arxiv_prompt,
         state_schema = MyState,
-        middleware = HumanInTheLoopMiddleware(
+        middleware = [HumanInTheLoopMiddleware(
             interrupt_on = {
                 "download_pdf": {
                     "allowed_decisions": [
@@ -55,7 +59,7 @@ async def make_graph(
                     ]
                 }
             }
-        )
+        )]
     )
 
     # build the graph 
@@ -85,6 +89,12 @@ async def make_graph(
     return graph
 
 if __name__ == "__main__":
+    import sys
+    from pathlib import Path
+    
+    # Add src directory to Python path for absolute imports
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    
     import asyncio
     from langgraph.checkpoint.memory import InMemorySaver
 

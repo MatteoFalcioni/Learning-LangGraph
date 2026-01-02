@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+
+# Add src directory to Python path for absolute imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 import asyncio
 from deepgram import AsyncDeepgramClient
 from deepgram.core.events import EventType
@@ -8,7 +14,7 @@ import pyaudio
 import threading
 from queue import Queue
 
-from utils import parse_for_interrupt
+from utils import parse_for_interrupt# , rich_print
 
 # ---------------------------------------------------------------
 # Example of using Flux for STT : 
@@ -63,12 +69,15 @@ async def stream_graph_task(graph, transcript, config=None, system_message=None,
             
             # Resume the graph with the user's decision
             async for event in graph.astream(
-                Command(resume=decision),
+                Command(resume={"decisions": [{"type": decision}]}),
                 config=config,
                 stream_mode="updates"
             ):
-                for node_name, node_output in event.items():
-                    print(f"[{node_name}]\n\n {node_output}\n\n")
+                for node_name, values in event.items():
+                    if 'messages' in values:
+                        msg = values['messages'][-1] if isinstance(values['messages'], list) else values['messages']
+                        print(msg.content)
+                        #rich_print(msg.content, node_name)
             
             # Clear the interrupt state after successful resume
             pending_interrupt['is_interrupted'] = False
@@ -86,9 +95,11 @@ async def stream_graph_task(graph, transcript, config=None, system_message=None,
             config=config,
             stream_mode="updates"
         ):
-            # Print each node's output as it streams
-            for node_name, node_output in event.items():
-                print(f"[{node_name}]\n\n {node_output}\n\n")
+            for node_name, values in event.items():
+                    if 'messages' in values:
+                        msg = values['messages'][-1] if isinstance(values['messages'], list) else values['messages']
+                        print(msg.content)
+                        #rich_print(msg.content, node_name)
         
         # After streaming completes, check if graph is interrupted
         state_snapshot = graph.get_state(config)

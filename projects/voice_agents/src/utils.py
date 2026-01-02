@@ -1,6 +1,9 @@
 from pathlib import Path
 from datetime import datetime
 from rapidfuzz import process, fuzz
+from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
 
 def plot_graph(graph, name: str):
     """
@@ -34,10 +37,13 @@ def fuzzy_match(input_str: str, target_strings: list[str], threshold: int = 70) 
         
         Example: input "Ye .. i accept" returns {"match": "yes", "score": 92}
     """
+    # Normalize to lowercase for case-insensitive matching
+    input_normalized = input_str.lower().strip()
+
     match_result = process.extractOne(
-        input_str,
+        input_normalized,
         target_strings,
-        scorer=fuzz.token_sort_ratio   
+        scorer=fuzz.ratio
     )
 
     if match_result is None:
@@ -64,6 +70,7 @@ def parse_for_interrupt(transcript):
         input "I don't know" returns {'result' : 'no_match'}
     """
     target_strings = ["yes", "no"]
+    
     result = fuzzy_match(transcript, target_strings)
 
     if result is None:
@@ -72,5 +79,30 @@ def parse_for_interrupt(transcript):
         match = result['match']
         return {'result' : match}
 
+# Color mapping for different nodes
+NODE_COLORS = {
+    "arxiv": "bold orange",
+}
 
+# Initialize rich console
+console = Console()
+
+def rich_print(node_name, content):
+    """Pretty print content with node-specific styling"""
+    # Get color for this node, default to white
+    color = NODE_COLORS.get(node_name, "white")
     
+    # Format node name (replace underscores, uppercase)
+    node_display = Text(node_name.upper().replace("_", " "), style=color)
+    
+    # Print in a styled panel
+    console.print(
+        Panel(
+            content,
+            title=node_display,
+            border_style=color,
+            title_align="left",
+            padding=(1, 2)
+        ),
+        new_line_start=True
+    )

@@ -4,3 +4,7 @@ pyaudio
 arxiv
 pymupdf
 rapidfuzz
+rich
+langchain
+langgraph
+langchain-openai
