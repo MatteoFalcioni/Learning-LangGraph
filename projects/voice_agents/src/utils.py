@@ -109,9 +109,15 @@ def rich_print(node_name, content):
         new_line_start=True
     )
 
-def clean_transcript(text):
+def clean_transcript_tts(text):
     """
     Strips transcript text of all text contained inside the dividers <info> </info>
     """
     # re.DOTALL makes . match newlines too
     return re.sub(r'<info>(.*?)</info>', '', text, flags=re.DOTALL)
+
+def clean_transcript_display(text):
+    """
+    Strips transcript text of only the separator text <info> </info>
+    """
+    return text.replace('<info>', '').replace('</info>', '')

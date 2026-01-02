@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from langgraph.types import Command
 from TTS.tts import read_text
-from utils import parse_for_interrupt, rich_print, console, clean_transcript
+from utils import clean_transcript_tts, parse_for_interrupt, rich_print, console, clean_transcript_display, clean_transcript_tts
 
 
 def handle_stream_output(node_name, values, tts_engine=None):
@@ -29,11 +29,11 @@ def handle_stream_output(node_name, values, tts_engine=None):
         if isinstance(values, dict) and 'messages' in values:
             msg = values['messages'][-1]
             if hasattr(msg, 'content'):
-                rich_print(node_name, msg.content)
+                rich_print(node_name, clean_transcript_display(msg.content))
                 
                 # If TTS is enabled, speak the content
                 if tts_engine:
-                    read_text(clean_transcript(msg.content), tts_engine)
+                    read_text(clean_transcript_tts(msg.content), tts_engine)
                 
                 return msg.content
         elif isinstance(values, str):
