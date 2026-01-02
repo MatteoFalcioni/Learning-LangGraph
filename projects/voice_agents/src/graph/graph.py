@@ -1,14 +1,17 @@
 from dotenv import load_dotenv
-load_dotenv()
+from pydantic import SecretStr
+import os
+from langgraph.graph import StateGraph, START, END
+from pathlib import Path
+from datetime import datetime
+from langchain.messages import HumanMessage
+from langchain.agents.middleware import HumanInTheLoopMiddleware
+
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 from prompt import arxiv_prompt
 from tools import arxiv_tools
 from state import MyState
-from langgraph.graph import StateGraph, START, END
-from pathlib import Path
-from datetime import datetime
-from langchain.messages import HumanMessage
 
 async def make_graph(
     checkpointer=None,
@@ -17,15 +20,42 @@ async def make_graph(
     """
     Creates the graph.
     """
+    load_dotenv()
 
     # ======= ARXIV =======
-    arxiv_llm = ChatOpenAI(model="gpt-4o-mini")
+
+    # grok fast if openrouter is available, otherwise gpt-4.1-mini
+    if os.getenv['OPENROUTER_API_KEY']:
+        # https://openrouter.ai/qwen/qwen3-coder/providers
+        arxiv_llm = ChatOpenAI(
+            model="qwen/qwen3-coder-flash", 
+            
+            # redirect LangChain to OpenRouter
+            base_url="https://openrouter.ai/api/v1",
+
+            # pass the OpenRouter key
+            api_key=SecretStr(os.environ["OPENROUTER_API_KEY"])
+        )
+    elif os.getenv['OPENROUTER_API_KEY']:
+        arxiv_llm = ChatOpenAI(model="gpt-4.1-mini")
+    else:
+        raise RuntimeError(f"No OpenRouter or OpenAI API keys provided. Provide at least one in your .env file")
 
     arxiv_agent = create_agent(
         model=arxiv_llm,
         tools=arxiv_tools,
         system_prompt=arxiv_prompt,
-        state_schema=MyState,
+        state_schema = MyState,
+        middleware = HumanInTheLoopMiddleware(
+            interrupt_on = {
+                "download_pdf": {
+                    "allowed_decisions": [
+                        "approve",
+                        "reject"
+                    ]
+                }
+            }
+        )
     )
 
     # build the graph 

@@ -1,16 +1,19 @@
 import asyncio
 from deepgram import AsyncDeepgramClient
 from deepgram.core.events import EventType
+from langgraph.types import Command
 import os
 from dotenv import load_dotenv
 import pyaudio
 import threading
 from queue import Queue
 
+from utils import parse_for_interrupt
+
 # ---------------------------------------------------------------
 # Example of using Flux for STT : 
 # automatically ends the recording when the user stops speaking
-# We will use this implementation 
+# We will use this implementation in our graph
 # --------------------------------------------------------------
 
 # Set your key here or in .env
@@ -19,7 +22,7 @@ API_KEY = os.getenv("DEEPGRAM_API_KEY")
 if not API_KEY:
     raise ValueError("DEEPGRAM_API_KEY is not set")
 
-async def stream_graph_task(graph, transcript, config=None, system_message=None):
+async def stream_graph_task(graph, transcript, config=None, system_message=None, pending_interrupt=None):
     """
     Stream the graph execution with the user transcript.
     Will be used in the flux_stt function to stream the graph execution with the user transcript.
@@ -28,11 +31,51 @@ async def stream_graph_task(graph, transcript, config=None, system_message=None)
         transcript: The user transcript to stream.
         config: The config to use for the graph.
         system_message: Optional system message to prepend to each transcript.
+        pending_interrupt: Dict to track if graph is interrupted (shared state).
+    Returns:
+        True if execution completed without interrupt, False if interrupted.
     """
     try:
         print(f"\n🤖 Processing: '{transcript}'")
         
-        # Build messages list
+        # If we have a pending interrupt, resume with the transcript as decision
+        if pending_interrupt and pending_interrupt.get('is_interrupted'):
+            print(f"⚡ Attempting to resume interrupted graph with: '{transcript}'")
+
+            result = parse_for_interrupt(transcript)
+            
+            # Handle no_match case - don't resume, stay interrupted
+            if result['result'] == 'no_match':
+                print(f"❌ Could not understand '{transcript}'. Please say 'yes', 'approve', 'no', or 'reject'.")
+                return False  # Stay interrupted, don't resume
+            
+            # Map yes/no to approve/reject
+            if result['result'] == 'yes':
+                decision = "approve"
+            elif result['result'] == 'no':
+                decision = "reject"
+            else:
+                # This shouldn't happen but handle it
+                print(f"⚠️  Unexpected result: {result['result']}")
+                return False
+            
+            print(f"✓ Understood: {decision}")
+            
+            # Resume the graph with the user's decision
+            async for event in graph.astream(
+                Command(resume=decision),
+                config=config,
+                stream_mode="updates"
+            ):
+                for node_name, node_output in event.items():
+                    print(f"[{node_name}]\n\n {node_output}\n\n")
+            
+            # Clear the interrupt state after successful resume
+            pending_interrupt['is_interrupted'] = False
+            pending_interrupt['snapshot'] = None
+            return True
+        
+        # Normal execution - new conversation turn
         messages = []
         if system_message:
             messages.append({"role": "system", "content": system_message})
@@ -46,8 +89,24 @@ async def stream_graph_task(graph, transcript, config=None, system_message=None)
             # Print each node's output as it streams
             for node_name, node_output in event.items():
                 print(f"[{node_name}]\n\n {node_output}\n\n")
+        
+        # After streaming completes, check if graph is interrupted
+        state_snapshot = graph.get_state(config)
+        if state_snapshot.next:  # If there's a next step, it means we're interrupted
+            print(f"\n⚠️  Graph interrupted! Waiting on: {state_snapshot.next}")
+            print(f"💬 Say 'yes' or 'no' to continue...")
+            if pending_interrupt:
+                pending_interrupt['is_interrupted'] = True
+                pending_interrupt['snapshot'] = state_snapshot
+            return False
+        
+        return True
+        
     except Exception as e:
         print(f"❌ [Graph Error] {e}")
+        if pending_interrupt:
+            pending_interrupt['is_interrupted'] = False
+        return False
 
 
 async def flux_stt(graph=None, config=None, system_message=None):
@@ -110,6 +169,12 @@ async def flux_stt(graph=None, config=None, system_message=None):
         # For tracking transcript and turns
         transcript = ""
         ready = asyncio.Event()
+        
+        # Track interrupted state
+        pending_interrupt = {
+            'is_interrupted': False,
+            'snapshot': None
+        }
 
         def on_flux_message(message, **kwargs):
             nonlocal transcript
@@ -123,7 +188,7 @@ async def flux_stt(graph=None, config=None, system_message=None):
                         if graph:
                             # Run graph in async task so it doesn't block audio streaming
                             asyncio.create_task(
-                                stream_graph_task(graph, transcript, config, system_message)
+                                stream_graph_task(graph, transcript, config, system_message, pending_interrupt)
                             )
 
                         transcript = ""
