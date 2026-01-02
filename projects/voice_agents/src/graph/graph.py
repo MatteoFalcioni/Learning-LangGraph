@@ -38,7 +38,7 @@ async def make_graph(
             api_key=SecretStr(os.environ["OPENROUTER_API_KEY"])
         )
     elif os.getenv('OPENAI_API_KEY'):
-        model = "gpt-4.1-mini"
+        model = "gpt-4.1"
         arxiv_llm = ChatOpenAI(model=model)
     else:
         raise RuntimeError(f"No OpenRouter or OpenAI API keys provided. Provide at least one in your .env file")

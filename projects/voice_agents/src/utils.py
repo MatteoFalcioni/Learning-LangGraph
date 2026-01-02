@@ -111,10 +111,12 @@ def rich_print(node_name, content):
 
 def clean_transcript_tts(text):
     """
-    Strips transcript text of all text contained inside the dividers <info> </info>
+    Strips transcript text of all text contained inside the dividers <info> </info>,
+    and replaces 'arxiv' (case insensitive) with 'archive'
     """
-    # re.DOTALL makes . match newlines too
-    return re.sub(r'<info>(.*?)</info>', '', text, flags=re.DOTALL)
+    text = re.sub(r'<info>(.*?)</info>', '', text, flags=re.DOTALL)  # need dotall to match newlines
+    text = re.sub(r'arxiv', 'archive', text, flags=re.IGNORECASE) # take out arxiv and use archive for reading
+    return text
 
 def clean_transcript_display(text):
     """

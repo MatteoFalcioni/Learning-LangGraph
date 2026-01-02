@@ -50,6 +50,17 @@ def download_pdf(paper_id: Annotated[str, "The ID of the paper to download from 
     return download_arxiv_pdf(paper_id)
 
 @tool
+def list_marked_articles(runtime: ToolRuntime) -> Command:
+    """
+    Lists the marked articles.
+    """
+    return Command(
+        update={
+            "messages" : [ToolMessage(content=f"The marked articles are: {runtime.state['bookmarked_articles']}", tool_call_id=runtime.tool_call_id)]
+        }
+    )
+
+@tool
 def list_downloads():
     """
     Lists the downloaded articles.
@@ -74,4 +85,4 @@ def initialize_vector_store():
     """
     return "Vector store initialized successfully"
 
-arxiv_tools = [search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page]
+arxiv_tools = [search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page, list_marked_articles]
