@@ -4,6 +4,7 @@ from rapidfuzz import process, fuzz
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
+import re
 
 def plot_graph(graph, name: str):
     """
@@ -24,6 +25,7 @@ def plot_graph(graph, name: str):
     with open(filename, "wb") as f:
         f.write(img_bytes)
     print(f"Graph saved to {name}")
+
 
 def fuzzy_match(input_str: str, target_strings: list[str], threshold: int = 70) -> dict | None: 
     """
@@ -106,3 +108,10 @@ def rich_print(node_name, content):
         ),
         new_line_start=True
     )
+
+def clean_transcript(text):
+    """
+    Strips transcript text of all text contained inside the dividers <info> </info>
+    """
+    # re.DOTALL makes . match newlines too
+    return re.sub(r'<info>(.*?)</info>', '', text, flags=re.DOTALL)

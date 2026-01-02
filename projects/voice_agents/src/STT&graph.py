@@ -5,7 +5,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from STT.flux import flux_stt
-from kokoro_onnx import Kokoro
 from graph.graph import make_graph
 import asyncio
 from dotenv import load_dotenv
@@ -16,21 +15,17 @@ load_dotenv()
 if __name__ == "__main__":
 
     async def main():
-        print(">>Initializing graph...")
+        print("Initializing graph...")
         checkpointer = InMemorySaver()
         graph = await make_graph(checkpointer=checkpointer)
-        print(">>Graph initialized successfully")
+        print("Graph initialized")
 
-        print(">>Initializing Kokoro text to speech model...")
-        kokoro = Kokoro("src/TTS/models/kokoro-v0_19.fp16.onnx", "src/TTS/models/voices-v1.0.bin")
-        print(">>Text to speech model initialized succesfully")
-
-        print(">>Running voice agent...\n")
+        print("Running voice agent...")
 
         config = {"configurable" : {"thread_id" : "0", "recursion_limit" : 35}} 
 
         try:
-            await flux_stt(graph=graph, config=config, tts_engine=kokoro)
+            await flux_stt(graph=graph, config=config)
         except (KeyboardInterrupt, SystemExit):
             pass  # Clean exit, already handled in flux_stt
 

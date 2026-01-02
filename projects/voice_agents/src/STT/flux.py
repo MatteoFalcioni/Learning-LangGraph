@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from typing import Optional
 
 # Add src directory to Python path for absolute imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -7,14 +8,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import asyncio
 from deepgram import AsyncDeepgramClient
 from deepgram.core.events import EventType
-from langgraph.types import Command
 import os
 from dotenv import load_dotenv
 import pyaudio
 import threading
 from queue import Queue
 
-from utils import parse_for_interrupt, rich_print, console
+from utils import console
+from graph.executor import stream_graph_task
 
 # ---------------------------------------------------------------
 # Example of using Flux for STT : 
@@ -28,120 +29,14 @@ API_KEY = os.getenv("DEEPGRAM_API_KEY")
 if not API_KEY:
     raise ValueError("DEEPGRAM_API_KEY is not set")
 
-async def stream_graph_task(graph, transcript, config=None, system_message=None, pending_interrupt=None):
-    """
-    Stream the graph execution with the user transcript.
-    Will be used in the flux_stt function to stream the graph execution with the user transcript.
-    Args:
-        graph: The compiled StateGraph to stream.
-        transcript: The user transcript to stream.
-        config: The config to use for the graph.
-        system_message: Optional system message to prepend to each transcript.
-        pending_interrupt: Dict to track if graph is interrupted (shared state).
-    Returns:
-        True if execution completed without interrupt, False if interrupted.
-    """
-    try:
-        console.print(f"\n🤖 Processing: [bold cyan]'{transcript}'[/bold cyan]")
-        
-        # If we have a pending interrupt, resume with the transcript as decision
-        if pending_interrupt and pending_interrupt.get('is_interrupted'):
-            console.print(f"⚡ [yellow]Resuming interrupted graph with:[/yellow] '{transcript}'")
-
-            result = parse_for_interrupt(transcript)
-            
-            # Handle no_match case - don't resume, stay interrupted
-            if result['result'] == 'no_match':
-                console.print(f"[bold red]❌ Could not understand '{transcript}'. Please say 'yes' or 'no'.[/bold red]")
-                return False  # Stay interrupted, don't resume
-            
-            # Map yes/no to approve/reject
-            if result['result'] == 'yes':
-                decision = "approve"
-            elif result['result'] == 'no':
-                decision = "reject"
-            else:
-                console.print(f"[bold yellow]⚠️  Unexpected result: {result['result']}[/bold yellow]")
-                return False
-            
-            console.print(f"[bold green]✓ Understood: {decision}[/bold green]")
-            console.print(f"[dim]🔄 Graph is running...[/dim]")
-            
-            # Resume the graph with the user's decision
-            async for event in graph.astream(
-                Command(resume={"decisions": [{"type": decision}]}),
-                config=config,
-                stream_mode="updates"
-            ):
-                for node_name, values in event.items():
-                    try:
-                        if isinstance(values, dict) and 'messages' in values:
-                            msg = values['messages'][-1]
-                            if hasattr(msg, 'content'):
-                                rich_print(node_name, msg.content)
-                        elif isinstance(values, str):
-                            console.print(f"[dim]{node_name}: {values}[/dim]")
-                    except Exception as e:
-                        console.print(f"[red]Error processing node {node_name}: {e}[/red]")
-            
-            # Clear the interrupt state after successful resume
-            pending_interrupt['is_interrupted'] = False
-            pending_interrupt['snapshot'] = None
-            console.print(f"[dim]✓ Graph execution completed[/dim]")
-            return True
-        
-        # Normal execution - new conversation turn
-        messages = []
-        if system_message:
-            messages.append({"role": "system", "content": system_message})
-        messages.append({"role": "user", "content": transcript})
-        
-        console.print(f"[dim]🔄 Graph is running...[/dim]")
-        
-        async for event in graph.astream(
-            {"messages": messages},
-            config=config,
-            stream_mode="updates"
-        ):
-            for node_name, values in event.items():
-                try:
-                    if isinstance(values, dict) and 'messages' in values:
-                        msg = values['messages'][-1]
-                        if hasattr(msg, 'content'):
-                            rich_print(node_name, msg.content)
-                    elif isinstance(values, str):
-                        console.print(f"[dim]{node_name}: {values}[/dim]")
-                except Exception as e:
-                    console.print(f"[red]Error processing node {node_name}: {e}[/red]")
-        
-        # After streaming completes, check if graph is interrupted
-        state_snapshot = graph.get_state(config)
-        if state_snapshot.next:  # If there's a next step, it means we're interrupted
-            console.print(f"\n[bold yellow]⚠️  Graph interrupted! Waiting for your approval to download the paper. Approve by saying 'yes', reject by saying 'no'[/bold yellow]")
-            console.print(f"[bold cyan]💬 Say 'yes' or 'no' to continue...[/bold cyan]")
-            if pending_interrupt:
-                pending_interrupt['is_interrupted'] = True
-                pending_interrupt['snapshot'] = state_snapshot
-            return False
-        
-        console.print(f"[dim]✓ Graph execution completed. Listening again...[/dim]")
-        return True
-        
-    except Exception as e:
-        console.print(f"[bold red]❌ [Graph Error][/bold red] {e}")
-        if pending_interrupt:
-            pending_interrupt['is_interrupted'] = False
-        return False
-
-
-async def flux_stt(graph=None, config=None, system_message=None):
+async def flux_stt(graph=None, config=None, tts_engine=None):
     """
     Flux STT (by Deepgram) implementation that streams graph execution on each turn.
     Automatically ends the recording when the user stops speaking.
     Args:
         graph: The compiled StateGraph to stream.
         config: The config to use for the graph. Defaults to None.
-        system_message: Optional system message to prepend to each transcript. Defaults to None.
+        tts_engine: Optional TTS engine to speak graph outputs. Defaults to None.
     """
     client = AsyncDeepgramClient(api_key=API_KEY)
 
@@ -213,7 +108,7 @@ async def flux_stt(graph=None, config=None, system_message=None):
                         if graph:
                             # Run graph in async task so it doesn't block audio streaming
                             asyncio.create_task(
-                                stream_graph_task(graph, transcript, config, system_message, pending_interrupt)
+                                stream_graph_task(graph, transcript, config, pending_interrupt, tts_engine)
                             )
 
                         transcript = ""
@@ -246,9 +141,15 @@ async def flux_stt(graph=None, config=None, system_message=None):
             streaming = False
             # Cancel the listening task
             listen_task.cancel()
+            try:
+                await listen_task
+            except asyncio.CancelledError:
+                pass
             # Give thread a moment to finish
             await asyncio.sleep(0.5)
             console.print("[bold red]Stopped listening.[/bold red]")
+            # Suppress the KeyboardInterrupt after cleanup
+            raise SystemExit(0)
 
 if __name__ == "__main__":
     # close with ctrl+c
