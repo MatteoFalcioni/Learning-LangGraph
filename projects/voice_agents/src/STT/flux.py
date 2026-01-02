@@ -14,7 +14,7 @@ import pyaudio
 import threading
 from queue import Queue
 
-from utils import parse_for_interrupt# , rich_print
+from utils import parse_for_interrupt, rich_print, console
 
 # ---------------------------------------------------------------
 # Example of using Flux for STT : 
@@ -42,17 +42,17 @@ async def stream_graph_task(graph, transcript, config=None, system_message=None,
         True if execution completed without interrupt, False if interrupted.
     """
     try:
-        print(f"\n🤖 Processing: '{transcript}'")
+        console.print(f"\n🤖 Processing: [bold cyan]'{transcript}'[/bold cyan]")
         
         # If we have a pending interrupt, resume with the transcript as decision
         if pending_interrupt and pending_interrupt.get('is_interrupted'):
-            print(f"⚡ Attempting to resume interrupted graph with: '{transcript}'")
+            console.print(f"⚡ [yellow]Resuming interrupted graph with:[/yellow] '{transcript}'")
 
             result = parse_for_interrupt(transcript)
             
             # Handle no_match case - don't resume, stay interrupted
             if result['result'] == 'no_match':
-                print(f"❌ Could not understand '{transcript}'. Please say 'yes', 'approve', 'no', or 'reject'.")
+                console.print(f"[bold red]❌ Could not understand '{transcript}'. Please say 'yes' or 'no'.[/bold red]")
                 return False  # Stay interrupted, don't resume
             
             # Map yes/no to approve/reject
@@ -61,11 +61,11 @@ async def stream_graph_task(graph, transcript, config=None, system_message=None,
             elif result['result'] == 'no':
                 decision = "reject"
             else:
-                # This shouldn't happen but handle it
-                print(f"⚠️  Unexpected result: {result['result']}")
+                console.print(f"[bold yellow]⚠️  Unexpected result: {result['result']}[/bold yellow]")
                 return False
             
-            print(f"✓ Understood: {decision}")
+            console.print(f"[bold green]✓ Understood: {decision}[/bold green]")
+            console.print(f"[dim]🔄 Graph is running...[/dim]")
             
             # Resume the graph with the user's decision
             async for event in graph.astream(
@@ -74,14 +74,20 @@ async def stream_graph_task(graph, transcript, config=None, system_message=None,
                 stream_mode="updates"
             ):
                 for node_name, values in event.items():
-                    if 'messages' in values:
-                        msg = values['messages'][-1] if isinstance(values['messages'], list) else values['messages']
-                        print(msg.content)
-                        #rich_print(msg.content, node_name)
+                    try:
+                        if isinstance(values, dict) and 'messages' in values:
+                            msg = values['messages'][-1]
+                            if hasattr(msg, 'content'):
+                                rich_print(node_name, msg.content)
+                        elif isinstance(values, str):
+                            console.print(f"[dim]{node_name}: {values}[/dim]")
+                    except Exception as e:
+                        console.print(f"[red]Error processing node {node_name}: {e}[/red]")
             
             # Clear the interrupt state after successful resume
             pending_interrupt['is_interrupted'] = False
             pending_interrupt['snapshot'] = None
+            console.print(f"[dim]✓ Graph execution completed[/dim]")
             return True
         
         # Normal execution - new conversation turn
@@ -90,31 +96,39 @@ async def stream_graph_task(graph, transcript, config=None, system_message=None,
             messages.append({"role": "system", "content": system_message})
         messages.append({"role": "user", "content": transcript})
         
+        console.print(f"[dim]🔄 Graph is running...[/dim]")
+        
         async for event in graph.astream(
             {"messages": messages},
             config=config,
             stream_mode="updates"
         ):
             for node_name, values in event.items():
-                    if 'messages' in values:
-                        msg = values['messages'][-1] if isinstance(values['messages'], list) else values['messages']
-                        print(msg.content)
-                        #rich_print(msg.content, node_name)
+                try:
+                    if isinstance(values, dict) and 'messages' in values:
+                        msg = values['messages'][-1]
+                        if hasattr(msg, 'content'):
+                            rich_print(node_name, msg.content)
+                    elif isinstance(values, str):
+                        console.print(f"[dim]{node_name}: {values}[/dim]")
+                except Exception as e:
+                    console.print(f"[red]Error processing node {node_name}: {e}[/red]")
         
         # After streaming completes, check if graph is interrupted
         state_snapshot = graph.get_state(config)
         if state_snapshot.next:  # If there's a next step, it means we're interrupted
-            print(f"\n⚠️  Graph interrupted! Waiting on: {state_snapshot.next}")
-            print(f"💬 Say 'yes' or 'no' to continue...")
+            console.print(f"\n[bold yellow]⚠️  Graph interrupted! Waiting for your approval to download the paper. Approve by saying 'yes', reject by saying 'no'[/bold yellow]")
+            console.print(f"[bold cyan]💬 Say 'yes' or 'no' to continue...[/bold cyan]")
             if pending_interrupt:
                 pending_interrupt['is_interrupted'] = True
                 pending_interrupt['snapshot'] = state_snapshot
             return False
         
+        console.print(f"[dim]✓ Graph execution completed. Listening again...[/dim]")
         return True
         
     except Exception as e:
-        print(f"❌ [Graph Error] {e}")
+        console.print(f"[bold red]❌ [Graph Error][/bold red] {e}")
         if pending_interrupt:
             pending_interrupt['is_interrupted'] = False
         return False
@@ -194,7 +208,7 @@ async def flux_stt(graph=None, config=None, system_message=None):
                 if hasattr(message, 'event') and message.event == 'EndOfTurn':
                     if hasattr(message, 'transcript') and message.transcript:
                         transcript = message.transcript.strip()
-                        print(f"✓ Transcript: '{transcript}'")
+                        console.print(f"[bold green]✓ Transcript:[/bold green] '{transcript}'")
                         
                         if graph:
                             # Run graph in async task so it doesn't block audio streaming
@@ -206,7 +220,7 @@ async def flux_stt(graph=None, config=None, system_message=None):
                         
         # Register handlers
         connection.on(EventType.MESSAGE, on_flux_message)
-        connection.on(EventType.ERROR, lambda error: print(f"Error: {error}"))
+        connection.on(EventType.ERROR, lambda error: console.print(f"[bold red]Error:[/bold red] {error}"))
         connection.on(EventType.OPEN, lambda _: ready.set())
 
         # Start listening as an async task (not a thread!)
@@ -214,7 +228,7 @@ async def flux_stt(graph=None, config=None, system_message=None):
 
         # Wait for connection to be ready
         await ready.wait()
-        print("🎤 Listening... (Press Ctrl+C to stop)")
+        console.print("[bold green]🎤 Listening...[/bold green] [dim](Press Ctrl+C to stop)[/dim]")
         
         try:
             # Main loop: read from queue and send to Deepgram
@@ -228,13 +242,13 @@ async def flux_stt(graph=None, config=None, system_message=None):
                 await asyncio.sleep(0.01)
                 
         except KeyboardInterrupt:
-            print("\n\nStopping...")
+            console.print("\n\n[bold yellow]Stopping...[/bold yellow]")
             streaming = False
             # Cancel the listening task
             listen_task.cancel()
             # Give thread a moment to finish
             await asyncio.sleep(0.5)
-            print("Stopped listening.")
+            console.print("[bold red]Stopped listening.[/bold red]")
 
 if __name__ == "__main__":
     # close with ctrl+c

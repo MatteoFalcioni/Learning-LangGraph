@@ -81,7 +81,7 @@ def parse_for_interrupt(transcript):
 
 # Color mapping for different nodes
 NODE_COLORS = {
-    "arxiv": "bold orange",
+    "arxiv": "bold cyan",
 }
 
 # Initialize rich console

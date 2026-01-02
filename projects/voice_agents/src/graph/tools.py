@@ -45,6 +45,8 @@ def download_pdf(paper_id: Annotated[str, "The ID of the paper to download from 
     """
     Download the PDF of a paper from arXiv, given its ID.
     """
+    print(f"Attempting to download paper with id: {paper_id}...")
+
     return download_arxiv_pdf(paper_id)
 
 @tool
