@@ -1,5 +1,4 @@
 from langgraph.graph import StateGraph, START, END
-from langgraph.types import Command
 from pathlib import Path
 from langchain.messages import HumanMessage
 
@@ -52,12 +51,28 @@ def make_graph(
     
     def image_reviewer_node(state: MyState):
         """ The image reviewer node. """
+        # TODO: make this a structured output agent 
+        # so that we get either accepted or rejected for the conditional edge
         result = image_reviewer_agent.invoke(state)
         last_msg_content = result['messages'][-1].content
 
+        structured_output = "accepted"  # TODO 
+
         return {
             "messages": [HumanMessage(content=last_msg_content)],
+            "review_status": structured_output
         }
+    
+    def check_approval(state: MyState) -> bool:
+        """ Check if the image was approved. """
+        return state.get('review_status', 'accepted')  # NOTE: default to accepted?
+    
+    def reducer_node(state: MyState):
+        """ 
+        The reducer node. 
+        NOTE: can this just be a pass through node to combine results?
+        """
+        return
 
     # build the graph 
     graph = StateGraph(MyState)
@@ -66,9 +81,14 @@ def make_graph(
     graph.add_node("summarizer", summarizer_node)
     graph.add_node("image_gen", image_gen_node)
     graph.add_node("image_reviewer", image_reviewer_node)
+    graph.add_node("reduce", reducer_node)
 
     graph.add_edge(START, "arxiv")
-    graph.add_edge("arxiv", END)
+    graph.add_edge("arxiv", "summarizer")
+    graph.add_edge("arxiv", "image_gen")
+    graph.add_edge("image_gen", "image_reviewer")
+    graph.add_conditional_edges("image_reviewer", "image_gen", check_approval)
+    graph.add_edge("reduce", END)
 
     graph = graph.compile(checkpointer=checkpointer)
 
