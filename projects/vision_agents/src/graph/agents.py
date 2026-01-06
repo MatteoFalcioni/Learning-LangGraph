@@ -76,7 +76,7 @@ def create_summarizer_agent():
 def create_image_gen_agent():
     """ Creates the vision agent. """    
     # ======= VISION AGENT =======
-    nanobanana = get_openrouter_model("google/gemini-3-flash-preview")
+    nanobanana = get_openrouter_model("google/gemini-3-pro-image-preview")
 
     image_gen_agent = create_agent(
         model=nanobanana,
