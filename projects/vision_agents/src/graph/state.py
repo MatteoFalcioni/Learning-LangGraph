@@ -5,7 +5,6 @@ from typing import Annotated
 class MyState(AgentState):
     """
     State for the graph.
-    Bookmarked_articles will be a list of dictionaries, each containing 'title' and 'id' keys. 
-    It will store the bookmarked articles' titles and ids.
     """
     bookmarked_articles: Annotated[list, add] 
+    parsed_papers: Annotated[list, add]  # do not parse twice: not a tool, but a node

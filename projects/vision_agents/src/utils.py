@@ -1,5 +1,13 @@
 from datetime import datetime
 from pathlib import Path
+from langchain_core.messages import HumanMessage
+from graph.state import MyState
+
+def add_imgs(state: MyState) -> HumanMessage:
+    imgs = state.get('generated_image', [])
+    # TODO construct content block here
+    msg = HumanMessage(content=f"Here are the images to review: {imgs}")
+    return msg
 
 def plot_graph(graph):
     """

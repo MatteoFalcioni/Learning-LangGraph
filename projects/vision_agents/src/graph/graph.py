@@ -28,7 +28,12 @@ def make_graph(
             "messages": [HumanMessage(content=last_msg_content)], 
             "bookmarked_articles": result.get("bookmarked_articles", [])
         }
-    
+
+    def Mistral_OCR_node(state: MyState):
+        """ The Mistral OCR node. """
+        # TODO: implement OCR logic here
+        return state
+
     def summarizer_node(state: MyState):
         """ The summarizer node. """
         result = summarizer_agent.invoke(state)
@@ -37,20 +42,25 @@ def make_graph(
         return {
                 "messages": [HumanMessage(content=last_msg_content)],
             }
-        
     
     def image_gen_node(state: MyState):
         """ The image generation node. """
+
+        # TODO: parse the image output properly and put it into state in order to give it to the reviewer
         result = image_gen_agent.invoke(state)
         last_msg_content = result['messages'][-1].content
+        # TODO
+        generated_img = result.get('generated_image', None)
 
         return {
                 "messages": [HumanMessage(content=last_msg_content)],
+                "generated_image": [generated_img]
             }
-        
     
     def image_reviewer_node(state: MyState):
         """ The image reviewer node. """
+        # TODO: parse image from state
+        input_state = add_imgs(state)
         # TODO: make this a structured output agent 
         # so that we get either accepted or rejected for the conditional edge
         result = image_reviewer_agent.invoke(state)
@@ -71,6 +81,7 @@ def make_graph(
         """ 
         The reducer node. 
         NOTE: can this just be a pass through node to combine results?
+        Actually its probably better to make this combine the text summary and the image 
         """
         return
 
@@ -78,14 +89,17 @@ def make_graph(
     graph = StateGraph(MyState)
 
     graph.add_node("arxiv", arxiv_node)
+    graph.add_node("mistral_ocr", Mistral_OCR_node)
     graph.add_node("summarizer", summarizer_node)
     graph.add_node("image_gen", image_gen_node)
     graph.add_node("image_reviewer", image_reviewer_node)
     graph.add_node("reduce", reducer_node)
 
     graph.add_edge(START, "arxiv")
-    graph.add_edge("arxiv", "summarizer")
-    graph.add_edge("arxiv", "image_gen")
+    graph.add_edge("arxiv", "mistral_ocr")
+    # branch here: 
+    graph.add_edge("mistral_ocr", "summarizer")
+    graph.add_edge("mistral_ocr", "image_gen")
     graph.add_edge("image_gen", "image_reviewer")
     graph.add_conditional_edges("image_reviewer", "image_gen", check_approval)
     graph.add_edge("reduce", END)

@@ -79,5 +79,3 @@ def read_by_page(
     """
     print(f"Reading papers...")
     return read_arxiv_in_memory(paper_id, start_page, end_page)
-
-arxiv_tools = [search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page, list_marked_articles]

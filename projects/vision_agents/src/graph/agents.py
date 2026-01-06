@@ -6,11 +6,14 @@ from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 
-from graph.prompts.arxiv import arxiv_prompt
-from graph.prompts.nanobanana import nanobanana_prompt
-from graph.prompts.summarizer import summarizer_prompt
-from graph.tools import arxiv_tools
-from graph.state import MyState
+from prompts.arxiv_prompt import arxiv_prompt
+from prompts.nanobanana_prompt import nanobanana_prompt
+from prompts.summarizer import summarizer_prompt
+from prompts.image_reviewer import reviewer_prompt
+from tools.arxiv_tools import search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page, list_marked_articles
+from tools.shared import read_downloaded_paper
+from tools.summarization import produce_summary
+from state import MyState
 
 load_dotenv()
 
@@ -38,7 +41,7 @@ def create_arxiv_agent():
 
     arxiv_agent = create_agent(
         model=arxiv_llm,
-        tools=arxiv_tools,
+        tools=[search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page, list_marked_articles],
         system_prompt=arxiv_prompt,
         state_schema = MyState,
         middleware = [HumanInTheLoopMiddleware(
@@ -62,7 +65,7 @@ def create_summarizer_agent():
 
     summarizer_agent = create_agent(
         model=summarizer_llm,
-        tools=[parse_pdf],
+        tools=[read_downloaded_paper, produce_summary],
         system_prompt=summarizer_prompt,
     )
 
@@ -75,7 +78,7 @@ def create_image_gen_agent():
 
     image_gen_agent = create_agent(
         model=nanobanana,
-        tools=arxiv_tools,
+        tools=[read_downloaded_paper],
         system_prompt=nanobanana_prompt,
     )
 
@@ -88,8 +91,7 @@ def create_image_reviewer_agent():
 
     image_reviewer_agent = create_agent(
         model=image_reviewer,
-        tools=arxiv_tools,
-        system_prompt=nanobanana_prompt,
+        system_prompt=reviewer_prompt,
     )
 
     return image_reviewer_agent
