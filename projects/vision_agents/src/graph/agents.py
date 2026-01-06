@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
-from pydantic import SecretStr
+from pydantic import SecretStr, BaseModel, Field
 import os
+from typing import Literal
 
 from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langchain_openai import ChatOpenAI
@@ -67,6 +68,7 @@ def create_summarizer_agent():
         model=summarizer_llm,
         tools=[read_downloaded_paper, produce_summary],
         system_prompt=summarizer_prompt,
+        state_schema=MyState
     )
 
     return summarizer_agent
@@ -80,18 +82,29 @@ def create_image_gen_agent():
         model=nanobanana,
         tools=[read_downloaded_paper],
         system_prompt=nanobanana_prompt,
+        state_schema=MyState
     )
 
     return image_gen_agent
 
+class ResponseSchema(BaseModel):
+        """
+        Schema for the image reviewer agent response.
+        Access it as result["structured_response"]
+        """
+        decision: Literal["accepted", "rejected"] = Field(description="The decision to accept or reject the image")
+        reasoning: str = Field(description="The reasoning for the decision")
+
 def create_image_reviewer_agent():
-    """ Creates the vision agent. """    
+    """ Creates the reviewer agent: it is a structured output agent"""    
     # ======= VISION AGENT =======
     image_reviewer = get_openrouter_model("google/gemini-3-flash-preview")
 
     image_reviewer_agent = create_agent(
         model=image_reviewer,
         system_prompt=reviewer_prompt,
+        state_schema=MyState,
+        response_format=ResponseSchema
     )
 
     return image_reviewer_agent

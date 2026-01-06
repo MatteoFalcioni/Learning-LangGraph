@@ -3,11 +3,29 @@ from pathlib import Path
 from langchain_core.messages import HumanMessage
 from graph.state import MyState
 
-def add_imgs(state: MyState) -> HumanMessage:
-    imgs = state.get('generated_image', [])
-    # TODO construct content block here
-    msg = HumanMessage(content=f"Here are the images to review: {imgs}")
-    return msg
+def prepare_multimodal_message(state: MyState) -> HumanMessage:
+    """
+    Helper to create multimodal message from state
+
+    Returns:
+        message (HumanMessage): The multimodal message
+    """    
+    msg = "Here are the images to review"
+    
+    content_blocks = [{"type": "text", "text": msg}]   # it is a list of typed dicts, see https://docs.langchain.com/oss/python/langchain/messages#multimodal
+    
+    # Add images
+    for img_b64 in state.get("generated_images", []):
+        content_blocks.append({
+            "type": "image",
+            "base64": img_b64,
+            "mime_type": "image/jpeg"  # TODO: check mime type of generated images by gemini
+        })
+
+    # construct the messages as HumanMessage(content_blocks=...)
+    message = HumanMessage(content_blocks=content_blocks)  # v1 format, see https://docs.langchain.com/oss/python/langchain/messages#multimodal
+    
+    return message   # NOTE: returns msg as is, then you need to wrap it in a list!
 
 def plot_graph(graph):
     """

@@ -4,7 +4,7 @@ from langchain.messages import HumanMessage
 
 from graph.agents import create_image_gen_agent, create_arxiv_agent, create_image_reviewer_agent, create_summarizer_agent
 from graph.state import MyState
-from utils import plot_graph
+from utils import plot_graph, prepare_multimodal_message
 
 
 def make_graph(
@@ -59,23 +59,25 @@ def make_graph(
     
     def image_reviewer_node(state: MyState):
         """ The image reviewer node. """
-        # TODO: parse image from state
-        input_state = add_imgs(state)
-        # TODO: make this a structured output agent 
-        # so that we get either accepted or rejected for the conditional edge
-        result = image_reviewer_agent.invoke(state)
-        last_msg_content = result['messages'][-1].content
+        input_state = prepare_multimodal_message(state)
+        
+        result = image_reviewer_agent.invoke(input_state)
+        structured_output = result["structured_response"]
 
-        structured_output = "accepted"  # TODO 
+        response = structured_output.decision  # "accepted" or "rejected"
+        reasoning = structured_output.reasoning
 
         return {
-            "messages": [HumanMessage(content=last_msg_content)],
-            "review_status": structured_output
+            "messages": [HumanMessage(content=reasoning)],
+            "review_status": response
         }
     
     def check_approval(state: MyState) -> bool:
         """ Check if the image was approved. """
-        return state.get('review_status', 'accepted')  # NOTE: default to accepted?
+        status = state.get('review_status', '')
+        if not status:
+            raise ValueError("Review status is missing in the state. This should never happen.")
+        return status 
     
     def reducer_node(state: MyState):
         """ 
