@@ -8,4 +8,5 @@ class MyState(AgentState):
     Bookmarked_articles will be a list of dictionaries, each containing 'title' and 'id' keys. 
     It will store the bookmarked articles' titles and ids.
     """
-    bookmarked_articles: Annotated[list, add] 
+    bookmarked_articles: Annotated[list, add] # list of dictionaries, each containing 'title' and 'id' keys
+    downloaded_papers_paths: Annotated[list, add] # list of strings, each containing the path to the downloaded paper

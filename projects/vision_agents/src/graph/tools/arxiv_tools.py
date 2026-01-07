@@ -42,13 +42,23 @@ def mark_as_relevant(
         )
 
 @tool
-def download_pdf(paper_id: Annotated[str, "The ID of the paper to download from the arXiv"]):
+def download_pdf(
+    runtime: ToolRuntime,
+    paper_id: Annotated[str, "The ID of the paper to download from the arXiv"]
+) -> Command:
     """
     Download the PDF of a paper from arXiv, given its ID.
     """
     print(f"Attempting to download paper with id: {paper_id}...")
 
-    return download_arxiv_pdf(paper_id)
+    filepath = download_arxiv_pdf(paper_id)
+
+    return Command(
+        update={
+            "messages" : [ToolMessage(content=f"Successfully downloaded file to: {filepath}", tool_call_id=runtime.tool_call_id)],
+            "downloaded_papers": [filepath]
+        }
+    )
 
 @tool
 def list_marked_articles(runtime: ToolRuntime) -> Command:
