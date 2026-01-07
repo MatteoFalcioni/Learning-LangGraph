@@ -50,18 +50,26 @@ def download_pdf(
     """
     Download the PDF of a paper from arXiv, given its ID.
     """
-    print(f"Attempting to download paper with id: {paper_id}...")
-
-    filepath = download_arxiv_pdf(paper_id)
-    with open(filepath, "rb") as f:
-        pdf_base64 = base64.b64encode(f.read()).decode("utf-8")
-    return Command(
-        update={
-            "messages" : [ToolMessage(content=f"Successfully downloaded file to: {filepath}", tool_call_id=runtime.tool_call_id)],
-            "downloaded_papers_paths": [filepath],
-            "pdf_base64": pdf_base64    # NOTE: only the last pdf is kept in the state (encoded)
-        }
-    )
+    metadata = get_paper_metadata(paper_id)
+    print(f"Downloading paper with title: {metadata['title']} (id: {paper_id})...")
+    
+    try:
+        filepath = download_arxiv_pdf(paper_id)
+        with open(filepath, "rb") as f:
+            pdf_base64 = base64.b64encode(f.read()).decode("utf-8")
+        return Command(
+            update={
+                "messages" : [ToolMessage(content=f"Successfully downloaded file to: {filepath}", tool_call_id=runtime.tool_call_id)],
+                "downloaded_papers_paths": [filepath],
+                "pdf_base64": pdf_base64    # NOTE: only the last pdf is kept in the state (encoded)
+            }
+        )
+    except ValueError as e:
+        return Command(
+            update={
+                "messages" : [ToolMessage(content=str(e), tool_call_id=runtime.tool_call_id)]
+            }
+        )
 
 @tool
 def list_marked_articles(runtime: ToolRuntime) -> Command:

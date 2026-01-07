@@ -32,12 +32,40 @@ def make_graph(
     def arxiv_node(state: MyState):
         """ The arxiv node. """
         result = arxiv_agent.invoke(state)
-        last_msg_content = result['messages'][-1].content
+
+        structured_output = result["structured_response"]
+        last_msg_content = structured_output.message
+        next_node = structured_output.next
 
         return {
             "messages": [HumanMessage(content=last_msg_content)], 
-            "bookmarked_articles": result.get("bookmarked_articles", [])
+            "bookmarked_articles": result.get("bookmarked_articles", []),
+            "downloaded_papers_paths": result.get("downloaded_papers_paths", []),
+            "pdf_base64": result.get("pdf_base64", ""),
+            "next" : next_node
         }
+
+    def router(state: MyState):
+        """ The first routing function. """
+        next_node = state.get("next", "end")
+
+        # add a check to see if the model has downloaded any papers
+        if len(state.get("downloaded_papers_paths", [])) == 0:
+            print(f"No papers have been downloaded. Cannot create a report. Ending the graph.")
+            return '__end__'
+
+        if next_node == 'end':
+            return '__end__'
+        elif next_node == 'summarizer':
+            return 'create_report'
+        else:
+            raise ValueError(f"Invalid next node: {next_node}")
+
+    def create_report_node(state: MyState):
+        """ The start of the creation of the report. 
+        It's a pass through node to branch conditionally"""
+        print(f"Initiating the creation of the summary...")
+        return state
 
     def summarizer_node(state: MyState):
         """ The summarizer node."""
@@ -55,10 +83,10 @@ def make_graph(
     
     def image_gen_node(state: MyState):
         """ The image generation node. """
+
+        print(f"Generating images...")
         
-        # TODO: example_file_path should be configurable or passed via state
-        example_file_path = "example.jpeg"  # This should be configured properly
-        image_urls = nanobanana_generate(state, nanobanana_prompt, example_file_path)
+        image_urls = nanobanana_generate(state, nanobanana_prompt)
         msg = "Succesfully generated images from the PDF"
 
         return {
@@ -81,8 +109,8 @@ def make_graph(
             "review_status": response
         }
     
-    def routing_function(state: MyState) -> bool:
-        """ Checks if the image was approved. """
+    def routing_function(state: MyState):
+        """ The second routing function: decides if an image is approved or not """
         status = state.get('review_status', '')
         if not status:
             raise ValueError("Review status is missing in state. This should never happen.")
@@ -106,6 +134,7 @@ def make_graph(
     graph = StateGraph(MyState)
 
     graph.add_node("arxiv", arxiv_node)
+    graph.add_node("create_report", create_report_node)
     graph.add_node("summarizer", summarizer_node)
     graph.add_node("image_gen", image_gen_node)
     graph.add_node("image_reviewer", image_reviewer_node)
@@ -113,10 +142,13 @@ def make_graph(
 
     graph.add_edge(START, "arxiv")
     # branch here: 
-    graph.add_edge("arxiv", "summarizer")
-    graph.add_edge("arxiv", "image_gen")
+    graph.add_conditional_edges("arxiv", router)
+    graph.add_edge("create_report", "summarizer")
+    graph.add_edge("create_report", "image_gen")
     graph.add_edge("image_gen", "image_reviewer")
-    graph.add_conditional_edges("image_gen", routing_function)
+    graph.add_conditional_edges("image_reviewer", routing_function)
+    graph.add_edge("summarizer", "reduce")
+    graph.add_edge("image_reviewer", "reduce")
     graph.add_edge("reduce", END)
 
     graph = graph.compile(checkpointer=checkpointer)

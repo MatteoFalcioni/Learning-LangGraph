@@ -100,19 +100,19 @@ def download_arxiv_pdf(paper_id: str, save_dir: str = "./downloads"):
         paper = next(client.results(search))
         
         # Create a safe filename using the ID and a sanitized title
-        # e.g., "2103.00020_Attention_Is_All_You_Need.pdf"
+        # e.g., "Attention_Is_All_You_Need.pdf"
         safe_title = "".join(c for c in paper.title if c.isalnum() or c in (' ', '_', '-')).rstrip()
         safe_title = safe_title.replace(" ", "_")
-        filename = f"{paper_id}_{safe_title}.pdf"
+        filename = f"{safe_title}.pdf"
         
         # Download
         path = paper.download_pdf(dirpath=save_dir, filename=filename)
-        return f"Successfully downloaded file to: {path}"
+        return path  # Return just the path, not a message
         
     except StopIteration:
-        return f"Error: Paper with ID {paper_id} not found."
+        raise ValueError(f"Error: Paper with ID {paper_id} not found.")
     except Exception as e:
-        return f"Error downloading paper: {str(e)}"
+        raise ValueError(f"Error downloading paper: {str(e)}")
 
 def read_arxiv_in_memory(paper_id: str, start_page: int = 1, end_page: int = 3):
     """

@@ -64,14 +64,13 @@ def add_pdfs(state: MyState) -> HumanMessage:
     message = HumanMessage(content_blocks=content_blocks)  # v1 format, see https://docs.langchain.com/oss/python/langchain/messages#multimodal
     return message   # NOTE: returns msg as is, then you need to wrap it in a list!
 
-def nanobanana_generate(state: MyState, nanobanana_prompt: str, example_file_path: str) -> list[str]:
+def nanobanana_generate(state: MyState, nanobanana_prompt: str) -> list[str]:
     """
     Generates an image from a PDF using the Nanobanana model.
 
     Args:
         state (MyState): The state of the graph
         nanobanana_prompt (str): The prompt for the Nanobanana model
-        example_file_path (str): The path to the example image file
     Returns:
         image_urls (list[str]): The list of image URLs
 
@@ -82,6 +81,12 @@ def nanobanana_generate(state: MyState, nanobanana_prompt: str, example_file_pat
         base_url="https://openrouter.ai/api/v1",
         api_key=os.getenv("OPENROUTER_API_KEY")
     )
+    # Find example.jpg using glob - search from the src directory
+    utils_dir = Path(__file__).parent
+    example_files = list(utils_dir.glob("**/example.jpg"))
+    if not example_files:
+        raise FileNotFoundError("Could not find example.jpg in the repository")
+    example_file_path = example_files[0]
     with open(example_file_path, "rb") as f:
         example_img = base64.b64encode(f.read()).decode("utf-8")
     response = client.chat.completions.create(
@@ -206,6 +211,9 @@ def rich_print(node_name, content):
         node_name (str): The name of the node
         content (str): The content to print
     """
+
+    if node_name == 'create_report':  # skip printing for the create_report node (pass through)
+        return
     # Get color for this node, default to white
     color = NODE_COLORS.get(node_name, "white")
     
@@ -323,8 +331,8 @@ def stream_graph_with_interrupt(graph, query, config=None, timeout_seconds=120):
         state_snapshot = graph.get_state(config)
         
         while state_snapshot.next:  # While there's a next step, we're interrupted
-            console.print(f"\n[bold yellow]⚠️  Graph interrupted! Waiting for your approval to download the paper.[/bold yellow]")
-            console.print(f"[bold cyan]💬 Type 'yes' to approve or 'no' to reject:[/bold cyan]")
+            console.print(f"\n[bold yellow]⚠️ Graph interrupted! Waiting for your approval to download[/bold yellow]")
+            console.print(f"[bold yellow]Type 'yes' to approve or 'no' to reject:[/bold yellow]")
             
             decision = get_user_decision(timeout_seconds)
             

@@ -1,47 +1,63 @@
 from graph.graph import make_graph
 from dotenv import load_dotenv
 from langgraph.checkpoint.memory import InMemorySaver
-from utils import stream_graph_with_interrupt
+from utils import stream_graph_with_interrupt, console
+import sys
 
 load_dotenv()
 
 if __name__ == "__main__":
     
     def main():
-        print(">>Initializing graph...")
+        console.print("[bold green]Initializing graph...[/bold green]")
         checkpointer = InMemorySaver()
-        graph = make_graph(checkpointer=checkpointer, plot=False)
-        print(">>Graph initialized successfully")
+        graph = make_graph(checkpointer=checkpointer, plot=True)
+        console.print("[bold green]Graph initialized successfully[/bold green]")
         
-        print(">>Running vision agent...\n")
+        console.print("\n[bold cyan]Vision Agent Chat - Type your queries (or 'exit'/'quit' to stop)[/bold cyan]\n")
         
-        config = {"configurable": {"thread_id": "0", "recursion_limit": 35}}
-        
-        # Example query - you can modify this
-        msg = """What are the most relevant papers on the topic of AI agents? 
-        Check the five most relevant ones and save the most relevant locally."""
-        
-        try:
-            print(f">>Query: {msg}\n")
-            
-            # Stream the graph with interrupt handling
-            result = stream_graph_with_interrupt(
-                graph=graph,
-                query=msg,
-                config=config,
-                timeout_seconds=120
-            )
-            
-            if result:
-                print("\n>>Task completed successfully!")
-            else:
-                print("\n>>Task failed or timed out")
-            
-        except (KeyboardInterrupt, SystemExit):
-            print("\n>>Vision agent stopped by user")
+        while True:
+            try:
+                # Get user input
+                user_query = input("\n[You]: ").strip()
+                
+                # Check for exit commands
+                if user_query.lower() in ['exit', 'quit', 'q']:
+                    console.print("\n[bold yellow]Goodbye![/bold yellow]")
+                    break
+                
+                # Skip empty queries
+                if not user_query:
+                    continue
+                
+                config = {"configurable": {"thread_id": "0", "recursion_limit": 35}}
+                
+                # Stream the graph with interrupt handling
+                result = stream_graph_with_interrupt(
+                    graph=graph,
+                    query=user_query,
+                    config=config,
+                    timeout_seconds=120
+                )
+                
+                if not result:
+                    console.print("\n[bold red]✗ Task failed or timed out[/bold red]")
+                
+            except KeyboardInterrupt:
+                console.print("\n\n[bold yellow]Interrupted. Type 'exit' to quit or continue with a new query.[/bold yellow]")
+                continue
+            except EOFError:
+                # Handle Ctrl+D
+                console.print("\n[bold yellow]Goodbye![/bold yellow]")
+                break
+            except Exception as e:
+                console.print(f"\n[bold red]✗ Error: {e}[/bold red]")
+                console.print("[dim]Continuing...[/dim]")
+                continue
     
     try:
         main()
     except KeyboardInterrupt:
-        pass  # Suppress the traceback
+        console.print("\n[bold yellow]Goodbye![/bold yellow]")
+        sys.exit(0)
 
