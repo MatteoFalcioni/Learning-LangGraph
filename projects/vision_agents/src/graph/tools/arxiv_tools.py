@@ -5,6 +5,7 @@ from typing import Annotated
 import os
 from langchain.tools import ToolRuntime
 from langchain.messages import ToolMessage
+import base64
 
 @tool
 def search_arxiv(query: Annotated[str, "The query to search in arXiv with"], max_results: Annotated[int, "The maximum number of results to return"] = 10):
@@ -52,11 +53,13 @@ def download_pdf(
     print(f"Attempting to download paper with id: {paper_id}...")
 
     filepath = download_arxiv_pdf(paper_id)
-
+    with open(filepath, "rb") as f:
+        pdf_base64 = base64.b64encode(f.read()).decode("utf-8")
     return Command(
         update={
             "messages" : [ToolMessage(content=f"Successfully downloaded file to: {filepath}", tool_call_id=runtime.tool_call_id)],
-            "downloaded_papers": [filepath]
+            "downloaded_papers_paths": [filepath],
+            "pdf_base64": pdf_base64    # NOTE: only the last pdf is kept in the state (encoded)
         }
     )
 
