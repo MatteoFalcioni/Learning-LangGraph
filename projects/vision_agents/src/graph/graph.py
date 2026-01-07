@@ -4,7 +4,8 @@ from langchain.messages import HumanMessage
 
 from graph.agents import create_image_gen_agent, create_arxiv_agent, create_image_reviewer_agent, create_summarizer_agent
 from graph.state import MyState
-from utils import plot_graph, add_imgs, add_pdfs
+from utils import plot_graph, add_imgs, add_pdfs, nanobanana_generate
+
 
 
 def make_graph(
@@ -33,18 +34,17 @@ def make_graph(
         """ The summarizer node."""
 
         # add the pdf as input 
-        input_state = add_pdfs(state.get("downloaded_papers_paths", []))
-        result = summarizer_agent.invoke(state)
-        last_msg_content = result['messages'][-1].content
+        image_urls = nanobanana_generate(state)
+        msg = "Succesfully generated images from the PDF"
 
         return {
-                "messages": [HumanMessage(content=last_msg_content)],
+                "messages": [HumanMessage(content=msg)],
+                "generated_images": image_urls
             }
     
     def image_gen_node(state: MyState):
         """ The image generation node. """
 
-        # TODO: parse the image output properly and put it into state in order to give it to the reviewer
         result = image_gen_agent.invoke(state)
         last_msg_content = result['messages'][-1].content
         # TODO
@@ -57,7 +57,7 @@ def make_graph(
     
     def image_reviewer_node(state: MyState):
         """ The image reviewer node. """
-        input_state = prepare_multimodal_message(state)
+        input_state = add_imgs(state)
         
         result = image_reviewer_agent.invoke(input_state)
         structured_output = result["structured_response"]

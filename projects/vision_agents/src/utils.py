@@ -2,15 +2,18 @@ from datetime import datetime
 from pathlib import Path
 from langchain_core.messages import HumanMessage
 from graph.state import MyState
+import os
 import base64
+from typing import Literal
+from openai import OpenAI
 
-def add_imgs(state: MyState) -> HumanMessage:
+def add_imgs(state: MyState, mime_type: Literal["image/jpeg", "image/png"]) -> HumanMessage:
     """
     Helper to create multimodal message from state
 
     Args:
         state (MyState): The state of the graph
-
+        mime_type (Literal["image/jpeg", "image/png"]): The mime type of the images
     Returns:
         message (HumanMessage): The multimodal message
     """    
@@ -23,7 +26,7 @@ def add_imgs(state: MyState) -> HumanMessage:
         content_blocks.append({
             "type": "image",
             "base64": img_b64,
-            "mime_type": "image/jpeg"  # TODO: check mime type of generated images by gemini
+            "mime_type": mime_type
         })
 
     # construct the messages as HumanMessage(content_blocks=...)
@@ -54,6 +57,56 @@ def add_pdfs(state: MyState) -> HumanMessage:
         })
     message = HumanMessage(content_blocks=content_blocks)  # v1 format, see https://docs.langchain.com/oss/python/langchain/messages#multimodal
     return message   # NOTE: returns msg as is, then you need to wrap it in a list!
+
+def nanobanana_generate(state: MyState) -> HumanMessage:
+    """
+    Generates an image from a PDF using the Nanobanana model.
+
+    Args:
+        state (MyState): The state of the graph
+
+    Returns:
+        image_urls (list[str]): The list of image URLs
+
+    Raises:
+        RuntimeError: If the image generation fails
+    """
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.getenv("OPENROUTER_API_KEY")
+    )
+    response = client.chat.completions.create(
+        model="google/gemini-3-pro-image-preview",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text", 
+                        "text": "Generate a blackboard summary of this PDF."
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:application/pdf;base64,{state.get('pdf_base64')}"
+                        }
+                    }
+                ]
+            }
+        ],
+        extra_body={"modalities": ["image", "text"]}
+    )
+
+    image_urls = []
+    response = response.choices[0].message
+    if response.images:
+        for image in response.images:
+            image_url = image['image_url']['url']  # Base64 data URL
+            image_urls.append(image_url)
+    else:
+        raise RuntimeError("Failed to generate image")
+
+    return image_urls
 
 def plot_graph(graph):
     """
