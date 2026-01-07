@@ -2,10 +2,14 @@ from datetime import datetime
 from pathlib import Path
 from langchain_core.messages import HumanMessage
 from graph.state import MyState
+import base64
 
-def prepare_multimodal_message(state: MyState) -> HumanMessage:
+def add_imgs(state: MyState) -> HumanMessage:
     """
     Helper to create multimodal message from state
+
+    Args:
+        state (MyState): The state of the graph
 
     Returns:
         message (HumanMessage): The multimodal message
@@ -25,6 +29,30 @@ def prepare_multimodal_message(state: MyState) -> HumanMessage:
     # construct the messages as HumanMessage(content_blocks=...)
     message = HumanMessage(content_blocks=content_blocks)  # v1 format, see https://docs.langchain.com/oss/python/langchain/messages#multimodal
     
+    return message   # NOTE: returns msg as is, then you need to wrap it in a list!
+
+def add_pdfs(state: MyState) -> HumanMessage:
+    """
+    Helper to add the pdf to the input message
+
+    Args:
+        state (MyState): The state of the graph
+
+    Returns:
+        message (HumanMessage): The message with the pdf
+    """    
+    msg = "Summarize the content of this document"
+    content_blocks = [{"type": "text", "text": msg}]   # it is a list of typed dicts, see https://docs.langchain.com/oss/python/langchain/messages#multimodal
+    
+    for pdf_path in state.get("downloaded_papers_paths", []):
+        with open(pdf_path, "rb") as f:
+            pdf_b64 = base64.b64encode(f.read()).decode("utf-8")
+        content_blocks.append({
+            "type": "file",
+            "base_64": pdf_b64,
+            "mime_type": "application/pdf"
+        })
+    message = HumanMessage(content_blocks=content_blocks)  # v1 format, see https://docs.langchain.com/oss/python/langchain/messages#multimodal
     return message   # NOTE: returns msg as is, then you need to wrap it in a list!
 
 def plot_graph(graph):
