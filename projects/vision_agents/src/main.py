@@ -1,7 +1,7 @@
 from graph.graph import make_graph
 from dotenv import load_dotenv
 from langgraph.checkpoint.memory import InMemorySaver
-from utils import stream_graph_with_interrupt, console
+from utils import stream_graph, console
 import sys
 
 load_dotenv()
@@ -33,7 +33,7 @@ if __name__ == "__main__":
                 config = {"configurable": {"thread_id": "0", "recursion_limit": 35}}
                 
                 # Stream the graph with interrupt handling
-                result = stream_graph_with_interrupt(
+                result = stream_graph(
                     graph=graph,
                     query=user_query,
                     config=config,

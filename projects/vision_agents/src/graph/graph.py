@@ -1,5 +1,4 @@
 from langgraph.graph import StateGraph, START, END
-from pathlib import Path
 from langchain.messages import HumanMessage
 
 from vision_agents.graph.agents import create_arxiv_agent, create_image_reviewer_agent, create_summarizer_agent
@@ -50,21 +49,24 @@ def make_graph(
         next_node = state.get("next", "end")
 
         # add a check to see if the model has downloaded any papers
-        if len(state.get("downloaded_papers_paths", [])) == 0:
+        if next_node == 'summarizer' and len(state.get("downloaded_papers_paths", [])) == 0:
             print(f"No papers have been downloaded. Cannot create a report. Ending the graph.")
             return '__end__'
 
-        if next_node == 'end':
-            return '__end__'
-        elif next_node == 'summarizer':
+        elif next_node == 'summarizer' and len(state.get("downloaded_papers_paths", [])) > 0:
             return 'create_report'
+
+        elif next_node == 'end':
+            return '__end__'
+
         else:
             raise ValueError(f"Invalid next node: {next_node}")
 
     def create_report_node(state: MyState):
         """ The start of the creation of the report. 
         It's a pass through node to branch conditionally"""
-        print(f"Initiating the creation of the summary...")
+        print(f"Initiating the creation of the summary: will generate a written summary and an image (nanobanana model)")
+        print(f"This process will take some time. Please wait...")
         return state
 
     def summarizer_node(state: MyState):
@@ -83,8 +85,6 @@ def make_graph(
     
     def image_gen_node(state: MyState):
         """ The image generation node. """
-
-        print(f"Generating images...")
         
         image_urls = nanobanana_generate(state, nanobanana_prompt)
         msg = "Succesfully generated images from the PDF"
@@ -141,14 +141,30 @@ def make_graph(
     graph.add_node("reduce", reducer_node)
 
     graph.add_edge(START, "arxiv")
-    # branch here: 
-    graph.add_conditional_edges("arxiv", router)
+
+    graph.add_conditional_edges(
+        "arxiv", 
+        router,
+        {
+            "create_report": "create_report", 
+            "__end__": END
+        }
+    )
+
     graph.add_edge("create_report", "summarizer")
     graph.add_edge("create_report", "image_gen")
     graph.add_edge("image_gen", "image_reviewer")
-    graph.add_conditional_edges("image_reviewer", routing_function)
+
+    graph.add_conditional_edges(
+        "image_reviewer", 
+        routing_function,
+        {
+            "reduce": "reduce", 
+            "image_gen": "image_gen"
+        }
+    )
+
     graph.add_edge("summarizer", "reduce")
-    graph.add_edge("image_reviewer", "reduce")
     graph.add_edge("reduce", END)
 
     graph = graph.compile(checkpointer=checkpointer)

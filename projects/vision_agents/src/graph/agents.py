@@ -3,7 +3,6 @@ from pydantic import SecretStr, BaseModel, Field
 import os
 from typing import Literal
 
-from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 
@@ -49,16 +48,6 @@ def create_arxiv_agent():
         tools=[search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page, list_marked_articles],
         system_prompt=arxiv_prompt,
         state_schema = MyState,
-        middleware = [HumanInTheLoopMiddleware(
-            interrupt_on = {
-                "download_pdf": {
-                    "allowed_decisions": [
-                        "approve",
-                        "reject"
-                    ]
-                }
-            }
-        )],
         response_format=ArxivResponseSchema
     )
 
