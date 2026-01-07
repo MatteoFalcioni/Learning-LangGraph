@@ -8,5 +8,7 @@ class MyState(AgentState):
     """
     bookmarked_articles: Annotated[list, add] # list of dictionaries, each containing 'title' and 'id' keys
     downloaded_papers_paths: Annotated[list, add] # list of strings, each containing the path to the downloaded paper
-    generated_images: Annotated[list, add]  # list of generated images
+    generated_images: Annotated[list, add]  # list of generated images urls
     review_status: str     # list of review status from image reviewer (uses default str replace)
+    pdf_base64: str # the base64 encoded PDF (only last pdf is kept in state)
+    summary: str # the summary of the PDF
