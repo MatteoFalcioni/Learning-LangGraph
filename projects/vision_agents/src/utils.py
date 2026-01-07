@@ -1,11 +1,12 @@
 from datetime import datetime
 from pathlib import Path
-from langchain_core.messages import HumanMessage
-from graph.state import MyState
 import os
 import base64
 from typing import Literal
 from openai import OpenAI
+import requests
+from langchain_core.messages import HumanMessage
+from graph.state import MyState
 
 def add_imgs(state: MyState, mime_type: Literal["image/jpeg", "image/png"]) -> HumanMessage:
     """
@@ -58,13 +59,14 @@ def add_pdfs(state: MyState) -> HumanMessage:
     message = HumanMessage(content_blocks=content_blocks)  # v1 format, see https://docs.langchain.com/oss/python/langchain/messages#multimodal
     return message   # NOTE: returns msg as is, then you need to wrap it in a list!
 
-def nanobanana_generate(state: MyState) -> HumanMessage:
+def nanobanana_generate(state: MyState, nanobanana_prompt: str, example_file_path: str) -> HumanMessage:
     """
     Generates an image from a PDF using the Nanobanana model.
 
     Args:
         state (MyState): The state of the graph
-
+        nanobanana_prompt (str): The prompt for the Nanobanana model
+        example_file_path (str): The path to the example image file
     Returns:
         image_urls (list[str]): The list of image URLs
 
@@ -75,6 +77,8 @@ def nanobanana_generate(state: MyState) -> HumanMessage:
         base_url="https://openrouter.ai/api/v1",
         api_key=os.getenv("OPENROUTER_API_KEY")
     )
+    with open(example_file_path, "rb") as f:
+        example_img = base64.b64encode(f.read()).decode("utf-8")
     response = client.chat.completions.create(
         model="google/gemini-3-pro-image-preview",
         messages=[
@@ -83,12 +87,18 @@ def nanobanana_generate(state: MyState) -> HumanMessage:
                 "content": [
                     {
                         "type": "text", 
-                        "text": "Generate a blackboard summary of this PDF."
+                        "text": nanobanana_prompt
                     },
                     {
                         "type": "image_url",
                         "image_url": {
                             "url": f"data:application/pdf;base64,{state.get('pdf_base64')}"
+                        }
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{example_img}"
                         }
                     }
                 ]
@@ -126,3 +136,47 @@ def plot_graph(graph):
     with open(filename, "wb") as f:
         f.write(img_bytes)
     print(f"Graph saved to {filename}")
+
+def save_images_and_get_markdown(state):
+    """
+    Saves the images and returns the markdown content.
+
+    Args:
+        state (MyState): The state of the graph
+
+    Returns:
+        output_path (str): The path to the markdown file
+    """
+    # Get the summary and the image URLs from the state
+    summary = state.get('summary', '')
+    image_urls = state.get('generated_images', [])
+    
+    # Create a directory for images
+    os.makedirs("assets", exist_ok=True)
+    os.makedirs("reports", exist_ok=True)
+
+    markdown_lines = [f"# Summary\n{summary}\n"]
+
+    paths = []
+    
+    for i, url in enumerate(image_urls):
+        image_name = f"summary_image_{i}.png"
+        path = os.path.join("assets", image_name)
+        paths.append(path)
+        
+        # Download the actual image data
+        img_data = requests.get(url).content
+        with open(path, 'wb') as handler:
+            handler.write(img_data)        
+
+    # Add local path to markdown but only of first image (only encode one image in the markdown)
+    markdown_lines.append(f"![Generated Image]({paths[0]})")
+    
+    markdown_content = "\n".join(markdown_lines)
+    
+    # Save the markdown file
+    output_path = "reports/report.md" 
+    with open(output_path, "w") as f:
+        f.write(markdown_content)
+    
+    return output_path
