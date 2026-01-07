@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vision_agents"
+version = "0.1.0"
+description = "Vision agents project using LangGraph"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "langchain",
+    "langgraph",
+    "langsmith",
+    "langchain-core",
+    "langchain-openai",
+    "python-dotenv",
+    "rich",
+    "openai",
+    "requests",
+    "arxiv",
+    "pymupdf",
+    "pydantic",
+]
+
+[tool.setuptools]
+packages = ["vision_agents", "vision_agents.graph", "vision_agents.graph.tools", "vision_agents.graph.prompts"]
+package-dir = {"vision_agents" = "src"}
+

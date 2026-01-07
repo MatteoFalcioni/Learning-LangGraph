@@ -2,11 +2,10 @@ from langgraph.graph import StateGraph, START, END
 from pathlib import Path
 from langchain.messages import HumanMessage
 
-from graph.agents import create_arxiv_agent, create_image_reviewer_agent, create_summarizer_agent
-from graph.state import MyState
-from utils import plot_graph, add_imgs, add_pdfs, nanobanana_generate, save_images_and_get_markdown
-
-
+from vision_agents.graph.agents import create_arxiv_agent, create_image_reviewer_agent, create_summarizer_agent
+from vision_agents.graph.state import MyState
+from vision_agents.graph.prompts.nanobanana_prompt import nanobanana_prompt
+from vision_agents.utils import plot_graph, add_imgs, add_pdfs, nanobanana_generate, save_images_and_get_markdown
 
 def make_graph(
     checkpointer=None,
@@ -57,7 +56,9 @@ def make_graph(
     def image_gen_node(state: MyState):
         """ The image generation node. """
         
-        image_urls = nanobanana_generate(state) # NOTE: nanobanana_generate automatically adds the pdf as input 
+        # TODO: example_file_path should be configurable or passed via state
+        example_file_path = "example.jpeg"  # This should be configured properly
+        image_urls = nanobanana_generate(state, nanobanana_prompt, example_file_path)
         msg = "Succesfully generated images from the PDF"
 
         return {
@@ -67,7 +68,7 @@ def make_graph(
     
     def image_reviewer_node(state: MyState):
         """ The image reviewer node. """
-        input_state = add_imgs(state)
+        input_state = add_imgs(state, mime_type="image/jpeg")
         
         result = image_reviewer_agent.invoke(input_state)
         structured_output = result["structured_response"]
@@ -127,12 +128,6 @@ def make_graph(
     return graph
 
 if __name__ == "__main__":
-    import sys
-    from pathlib import Path
-    
-    # Add src directory to Python path for absolute imports
-    sys.path.insert(0, str(Path(__file__).parent.parent))
-    
     from langgraph.checkpoint.memory import InMemorySaver
 
 

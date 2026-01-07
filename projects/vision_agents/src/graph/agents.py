@@ -7,12 +7,12 @@ from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 
-from prompts.arxiv_prompt import arxiv_prompt
-from prompts.summarizer import summarizer_prompt
-from prompts.image_reviewer import reviewer_prompt
-from tools.arxiv_tools import search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page, list_marked_articles
-from tools.summarization import produce_summary
-from state import MyState
+from vision_agents.graph.prompts.arxiv_prompt import arxiv_prompt
+from vision_agents.graph.prompts.summarizer import summarizer_prompt
+from vision_agents.graph.prompts.image_reviewer import reviewer_prompt
+from vision_agents.graph.tools.arxiv_tools import search_arxiv, mark_as_relevant, download_pdf, list_downloads, read_by_page, list_marked_articles
+from vision_agents.graph.tools.summarization import produce_summary
+from vision_agents.graph.state import MyState
 
 load_dotenv()
 

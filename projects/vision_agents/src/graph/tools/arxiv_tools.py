@@ -1,4 +1,4 @@
-from arxiv_functions import search_arxiv_fn, download_arxiv_pdf, read_arxiv_in_memory, get_paper_metadata
+from vision_agents.graph.tools.arxiv_functions import search_arxiv_fn, download_arxiv_pdf, read_arxiv_in_memory, get_paper_metadata
 from langchain_core.tools import tool
 from langgraph.types import Command
 from typing import Annotated

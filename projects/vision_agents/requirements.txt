@@ -1,3 +1,11 @@
-mistralai
 langchain
 langgraph
+langsmith
+langchain-core
+langchain-openai
+dotenv
+rich
+pymupdf
+arxiv
+rapidfuzz
+markdownify

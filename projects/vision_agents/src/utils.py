@@ -6,7 +6,7 @@ from typing import Literal
 from openai import OpenAI
 import requests
 from langchain_core.messages import HumanMessage
-from graph.state import MyState
+from vision_agents.graph.state import MyState
 
 def add_imgs(state: MyState, mime_type: Literal["image/jpeg", "image/png"]) -> HumanMessage:
     """
@@ -59,7 +59,7 @@ def add_pdfs(state: MyState) -> HumanMessage:
     message = HumanMessage(content_blocks=content_blocks)  # v1 format, see https://docs.langchain.com/oss/python/langchain/messages#multimodal
     return message   # NOTE: returns msg as is, then you need to wrap it in a list!
 
-def nanobanana_generate(state: MyState, nanobanana_prompt: str, example_file_path: str) -> HumanMessage:
+def nanobanana_generate(state: MyState, nanobanana_prompt: str, example_file_path: str) -> list[str]:
     """
     Generates an image from a PDF using the Nanobanana model.
 
