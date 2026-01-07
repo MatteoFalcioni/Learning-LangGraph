@@ -2,9 +2,9 @@ from langgraph.graph import StateGraph, START, END
 from pathlib import Path
 from langchain.messages import HumanMessage
 
-from graph.agents import create_image_gen_agent, create_arxiv_agent, create_image_reviewer_agent, create_summarizer_agent
+from graph.agents import create_arxiv_agent, create_image_reviewer_agent, create_summarizer_agent
 from graph.state import MyState
-from utils import plot_graph, add_imgs, add_pdfs, nanobanana_generate
+from utils import plot_graph, add_imgs, add_pdfs, nanobanana_generate, save_images_and_get_markdown
 
 
 
@@ -14,10 +14,20 @@ def make_graph(
 ):
     """
     Creates the graph.
+
+    Args:
+        checkpointer: The checkpointer to use for the graph.
+        plot: Whether to plot the graph.
+
+    Returns:
+        The graph.
+
+    Raises:
+        ValueError: If the review status is missing in the state.
+        ValueError: If the review status is invalid.
     """
     arxiv_agent = create_arxiv_agent()
     summarizer_agent = create_summarizer_agent()
-    image_gen_agent = create_image_gen_agent()
     image_reviewer_agent = create_image_reviewer_agent()
 
     def arxiv_node(state: MyState):
@@ -34,25 +44,25 @@ def make_graph(
         """ The summarizer node."""
 
         # add the pdf as input 
-        image_urls = nanobanana_generate(state)
+        input_state = add_pdfs(state)
+        result = summarizer_agent.invoke(input_state)
+        structured_output = result["structured_response"]
+        summary = structured_output.summary
+
+        return {
+                "messages": [HumanMessage(content="Summary generated successfully")],
+                "summary": summary
+            }
+    
+    def image_gen_node(state: MyState):
+        """ The image generation node. """
+        
+        image_urls = nanobanana_generate(state) # NOTE: nanobanana_generate automatically adds the pdf as input 
         msg = "Succesfully generated images from the PDF"
 
         return {
                 "messages": [HumanMessage(content=msg)],
                 "generated_images": image_urls
-            }
-    
-    def image_gen_node(state: MyState):
-        """ The image generation node. """
-
-        result = image_gen_agent.invoke(state)
-        last_msg_content = result['messages'][-1].content
-        # TODO
-        generated_img = result.get('generated_image', None)
-
-        return {
-                "messages": [HumanMessage(content=last_msg_content)],
-                "generated_image": [generated_img]
             }
     
     def image_reviewer_node(state: MyState):
@@ -70,20 +80,26 @@ def make_graph(
             "review_status": response
         }
     
-    def check_approval(state: MyState) -> bool:
-        """ Check if the image was approved. """
+    def routing_function(state: MyState) -> bool:
+        """ Checks if the image was approved. """
         status = state.get('review_status', '')
         if not status:
-            raise ValueError("Review status is missing in the state. This should never happen.")
-        return status 
+            raise ValueError("Review status is missing in state. This should never happen.")
+        if status == "accepted":
+            return "reduce"
+        elif status == "rejected":
+            return "image_gen"
+        else:
+            raise ValueError("Review status is invalid. This should never happen.")
     
     def reducer_node(state: MyState):
         """ 
         The reducer node. 
-        NOTE: can this just be a pass through node to combine results?
-        Actually its probably better to make this combine the text summary and the image 
         """
-        return
+        output_path = save_images_and_get_markdown(state)
+        print(f"Final report saved to path: {output_path}")
+
+        return state
 
     # build the graph 
     graph = StateGraph(MyState)
@@ -99,7 +115,7 @@ def make_graph(
     graph.add_edge("arxiv", "summarizer")
     graph.add_edge("arxiv", "image_gen")
     graph.add_edge("image_gen", "image_reviewer")
-    graph.add_conditional_edges("image_reviewer", "image_gen", check_approval)
+    graph.add_conditional_edges("image_gen", routing_function)
     graph.add_edge("reduce", END)
 
     graph = graph.compile(checkpointer=checkpointer)
