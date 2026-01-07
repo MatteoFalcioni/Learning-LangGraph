@@ -66,26 +66,12 @@ def create_summarizer_agent():
 
     summarizer_agent = create_agent(
         model=summarizer_llm,
-        tools=[read_downloaded_paper, produce_summary],
+        tools=[produce_summary],
         system_prompt=summarizer_prompt,
         state_schema=MyState
     )
 
     return summarizer_agent
-
-def create_image_gen_agent():
-    """ Creates the vision agent. """    
-    # ======= VISION AGENT =======
-    nanobanana = get_openrouter_model("google/gemini-3-pro-image-preview")
-
-    image_gen_agent = create_agent(
-        model=nanobanana,
-        tools=[read_downloaded_paper],
-        system_prompt=nanobanana_prompt,
-        state_schema=MyState
-    )
-
-    return image_gen_agent
 
 class ResponseSchema(BaseModel):
         """
