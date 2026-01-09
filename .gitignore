@@ -2,5 +2,6 @@ index.md
 *pycache*
 *.env
 *.pdf
+downloads/
 credentials.json
 token.json

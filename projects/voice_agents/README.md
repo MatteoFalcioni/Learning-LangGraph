@@ -45,7 +45,7 @@ You're ready to run the agent. From `projects/voice_agents`, run:
 $ PYTHONPATH=src python src/main.py
 ```
 <center>
-    <img src="./imgs/screenshot.png" widht=800>
+    <img src="./imgs/screenshot.png" width=800>
 </center>
 
 ## Tech Stack (other than LangGraph)
