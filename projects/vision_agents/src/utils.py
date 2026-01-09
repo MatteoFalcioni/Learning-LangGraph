@@ -10,8 +10,6 @@ from vision_agents.graph.state import MyState
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
-import signal
-from langgraph.types import Command
 
 def add_imgs(state: MyState, mime_type: Literal["image/jpeg", "image/png"]) -> HumanMessage:
     """
@@ -195,7 +193,7 @@ def handle_stream_output(node_name, values):
     
     return None
 
-def stream_graph(graph, query, config=None, timeout_seconds=120):
+def stream_graph(graph, query, config=None):
     """
     Stream the graph execution with interrupt handling.
     
