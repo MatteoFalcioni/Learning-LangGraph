@@ -12,6 +12,8 @@ langchain-anthropic
 langchain-tavily
 langchain-google-community[gmail,calendar]
 langchain-mcp-adapters
+langchain-text-splitters
+langchain-chroma
 
 tavily
 markdownify
