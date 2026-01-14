@@ -1,0 +1,11 @@
+langgraph
+langsmith
+langchain-core
+langchain-openai
+langchain-anthropic
+langchain-google-community[gmail,calendar]
+langchain-mcp-adapters
+
+markdownify
+dotenv
+rich
