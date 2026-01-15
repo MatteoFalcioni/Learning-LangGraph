@@ -19,7 +19,7 @@
             }
         ],
         "tables": [],
-        "doc_id": "c9001d49-714e-4372-91a3-4b2390c87840"
+        "doc_id": "b7c005bd-da48-43ec-a2d0-3592bc684a0d"
     },
     {
         "document_summary": "The document introduces Kimi K2, a Mixture-of-Experts (MoE) large language model with 32 billion activated parameters and 1 trillion total parameters. It highlights the MuonClip optimizer, which improves upon the Muon optimizer with a novel QK-clip technique to enhance training stability and token efficiency. Kimi K2 was pre-trained on 15.5 trillion tokens and underwent a multi-stage post-training process, including a large-scale agentic data synthesis pipeline and a joint reinforcement learning stage. The model demonstrates state-of-the-art performance on various benchmarks, particularly excelling in agentic capabilities and tasks related to software engineering. The document also discusses the technical aspects of the model, including the MuonClip optimizer, the architecture of Kimi K2, and the training infrastructure used. It concludes by mentioning the release of the base and post-trained model checkpoints to facilitate future research and applications of agentic intelligence.",
@@ -30,7 +30,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "24236b9c-1c86-4197-ac4c-e7ebee4796b5"
+        "doc_id": "daca2d6a-0421-4803-b613-82b2cae8381c"
     },
     {
         "document_summary": "The document introduces Kimi K2, a Mixture-of-Experts (MoE) large language model with 32 billion activated parameters and 1 trillion total parameters. It highlights the MuonClip optimizer, which improves upon the Muon optimizer with a novel QK-clip technique to enhance training stability and token efficiency. Kimi K2 was pre-trained on 15.5 trillion tokens and underwent a multi-stage post-training process, including a large-scale agentic data synthesis pipeline and a joint reinforcement learning stage. The model demonstrates state-of-the-art performance on various benchmarks, particularly excelling in agentic capabilities and tasks related to software engineering. The document also discusses the technical aspects of the model, including the MuonClip optimizer, the architecture of Kimi K2, and the training infrastructure used. It concludes by mentioning the release of the base and post-trained model checkpoints to facilitate future research and applications of agentic intelligence.",
@@ -41,7 +41,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "fb850899-09dc-437b-8a03-d1b7b1ceb1ff"
+        "doc_id": "c5e525f8-3f8b-49c8-b707-ec94887ad01e"
     },
     {
         "document_summary": "The document introduces Kimi K2, a Mixture-of-Experts (MoE) large language model with 32 billion activated parameters and 1 trillion total parameters. It highlights the MuonClip optimizer, which improves upon the Muon optimizer with a novel QK-clip technique to enhance training stability and token efficiency. Kimi K2 was pre-trained on 15.5 trillion tokens and underwent a multi-stage post-training process, including a large-scale agentic data synthesis pipeline and a joint reinforcement learning stage. The model demonstrates state-of-the-art performance on various benchmarks, particularly excelling in agentic capabilities and tasks related to software engineering. The document also discusses the technical aspects of the model, including the MuonClip optimizer, the architecture of Kimi K2, and the training infrastructure used. It concludes by mentioning the release of the base and post-trained model checkpoints to facilitate future research and applications of agentic intelligence.",
@@ -72,7 +72,7 @@
             }
         ],
         "tables": [],
-        "doc_id": "5d3b66c8-62ac-48b3-9237-0270c2131255"
+        "doc_id": "e90dd895-80fe-4cd8-a353-09777c08f0c9"
     },
     {
         "document_summary": "The document introduces Kimi K2, a Mixture-of-Experts (MoE) large language model with 32 billion activated parameters and 1 trillion total parameters. It highlights the MuonClip optimizer, which improves upon the Muon optimizer with a novel QK-clip technique to enhance training stability and token efficiency. Kimi K2 was pre-trained on 15.5 trillion tokens and underwent a multi-stage post-training process, including a large-scale agentic data synthesis pipeline and a joint reinforcement learning stage. The model demonstrates state-of-the-art performance on various benchmarks, particularly excelling in agentic capabilities and tasks related to software engineering. The document also discusses the technical aspects of the model, including the MuonClip optimizer, the architecture of Kimi K2, and the training infrastructure used. It concludes by mentioning the release of the base and post-trained model checkpoints to facilitate future research and applications of agentic intelligence.",
@@ -101,7 +101,7 @@
                 "html_content": "<table><tr><td># Rephrasings</td><td># Epochs</td><td>SimpleQA Accuracy</td></tr><tr><td>0 (raw wiki-text)</td><td>10</td><td>23.76</td></tr><tr><td>1</td><td>10</td><td>27.39</td></tr><tr><td>10</td><td>1</td><td>28.94</td></tr></table>"
             }
         ],
-        "doc_id": "01fa953f-b16f-42e9-ab15-fadd2fb81ba4"
+        "doc_id": "c693eb9b-2fe3-4c45-b1f4-b929551ef846"
     },
     {
         "document_summary": "The document introduces Kimi K2, a Mixture-of-Experts (MoE) large language model with 32 billion activated parameters and 1 trillion total parameters. It highlights the MuonClip optimizer, which improves upon the Muon optimizer with a novel QK-clip technique to enhance training stability and token efficiency. Kimi K2 was pre-trained on 15.5 trillion tokens and underwent a multi-stage post-training process, including a large-scale agentic data synthesis pipeline and a joint reinforcement learning stage. The model demonstrates state-of-the-art performance on various benchmarks, particularly excelling in agentic capabilities and tasks related to software engineering. The document also discusses the technical aspects of the model, including the MuonClip optimizer, the architecture of Kimi K2, and the training infrastructure used. It concludes by mentioning the release of the base and post-trained model checkpoints to facilitate future research and applications of agentic intelligence.",
@@ -130,7 +130,7 @@
                 "html_content": "<table><tr><td></td><td>DeepSeek-V3</td><td>Kimi K2</td><td>\u0394</td></tr><tr><td>#Layers</td><td>61</td><td>61</td><td>=</td></tr><tr><td>Total Parameters</td><td>671B</td><td>1.04T</td><td>\u219154%</td></tr><tr><td>Activated Parameters</td><td>37B</td><td>32.6B</td><td>\u219313%</td></tr><tr><td>Experts (total)</td><td>256</td><td>384</td><td>\u219150%</td></tr><tr><td>Experts Active per Token</td><td>8</td><td>8</td><td>=</td></tr><tr><td>Shared Experts</td><td>1</td><td>1</td><td>=</td></tr><tr><td>Attention Heads</td><td>128</td><td>64</td><td>\u219350%</td></tr><tr><td>Number of Dense Layers</td><td>3</td><td>1</td><td>\u219367%</td></tr><tr><td>Expert Grouping</td><td>Yes</td><td>No</td><td>-</td></tr></table>"
             }
         ],
-        "doc_id": "5fa5c5e3-41e8-4a84-b4b6-026ba874efa9"
+        "doc_id": "b3fee991-6b70-4501-944d-36405c99cd4a"
     },
     {
         "document_summary": "The document introduces Kimi K2, a Mixture-of-Experts (MoE) large language model with 32 billion activated parameters and 1 trillion total parameters. It highlights the MuonClip optimizer, which improves upon the Muon optimizer with a novel QK-clip technique to enhance training stability and token efficiency. Kimi K2 was pre-trained on 15.5 trillion tokens and underwent a multi-stage post-training process, including a large-scale agentic data synthesis pipeline and a joint reinforcement learning stage. The model demonstrates state-of-the-art performance on various benchmarks, particularly excelling in agentic capabilities and tasks related to software engineering. The document also discusses the technical aspects of the model, including the MuonClip optimizer, the architecture of Kimi K2, and the training infrastructure used. It concludes by mentioning the release of the base and post-trained model checkpoints to facilitate future research and applications of agentic intelligence.",
@@ -161,7 +161,7 @@
             }
         ],
         "tables": [],
-        "doc_id": "415be2ec-4a3c-4a5f-9c56-2498cf95b54d"
+        "doc_id": "3fdf6d64-b03a-404d-b1e2-745ddb30eb8d"
     },
     {
         "document_summary": "The document introduces Kimi K2, a Mixture-of-Experts (MoE) large language model with 32 billion activated parameters and 1 trillion total parameters. It highlights the MuonClip optimizer, which improves upon the Muon optimizer with a novel QK-clip technique to enhance training stability and token efficiency. Kimi K2 was pre-trained on 15.5 trillion tokens and underwent a multi-stage post-training process, including a large-scale agentic data synthesis pipeline and a joint reinforcement learning stage. The model demonstrates state-of-the-art performance on various benchmarks, particularly excelling in agentic capabilities and tasks related to software engineering. The document also discusses the technical aspects of the model, including the MuonClip optimizer, the architecture of Kimi K2, and the training infrastructure used. It concludes by mentioning the release of the base and post-trained model checkpoints to facilitate future research and applications of agentic intelligence.",
@@ -183,7 +183,7 @@
             }
         ],
         "tables": [],
-        "doc_id": "af76d989-7bc7-4cb3-8808-4dc763964b24"
+        "doc_id": "431ea4c0-ffb9-483e-88c6-82c01f868bde"
     },
     {
         "document_summary": "The document discusses the technical aspects of a model named Kimi K2, focusing on its training, post-training, and reinforcement learning processes. It details the activation CPU offload mechanism, training recipe, supervised fine-tuning, and reinforcement learning strategies. The document also covers the data synthesis pipeline for tool use, domain evolution, agent diversification, and the infrastructure supporting these processes. It concludes with evaluations of Kimi-K2-Instruct against various benchmarks, highlighting its performance in coding, tool use, math & STEM tasks, and general tasks.",
@@ -194,7 +194,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "18a94ad0-025f-4df5-8e17-1b58ac44176e"
+        "doc_id": "20b87681-cf81-4542-aa05-d03066a4bcc9"
     },
     {
         "document_summary": "The document discusses the technical aspects of a model named Kimi K2, focusing on its training, post-training, and reinforcement learning processes. It details the activation CPU offload mechanism, training recipe, supervised fine-tuning, and reinforcement learning strategies. The document also covers the data synthesis pipeline for tool use, domain evolution, agent diversification, and the infrastructure supporting these processes. It concludes with evaluations of Kimi-K2-Instruct against various benchmarks, highlighting its performance in coding, tool use, math & STEM tasks, and general tasks.",
@@ -243,7 +243,7 @@
             }
         ],
         "tables": [],
-        "doc_id": "3fd6a434-57d9-49cf-9e2d-fa4d0e6cfac8"
+        "doc_id": "b5864cb6-5516-4ff6-9780-200ea5ef68e9"
     },
     {
         "document_summary": "The document discusses the technical aspects of a model named Kimi K2, focusing on its training, post-training, and reinforcement learning processes. It details the activation CPU offload mechanism, training recipe, supervised fine-tuning, and reinforcement learning strategies. The document also covers the data synthesis pipeline for tool use, domain evolution, agent diversification, and the infrastructure supporting these processes. It concludes with evaluations of Kimi-K2-Instruct against various benchmarks, highlighting its performance in coding, tool use, math & STEM tasks, and general tasks.",
@@ -254,7 +254,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "3452cc1f-acf7-474b-b95e-2be5752ebdaa"
+        "doc_id": "142bac32-43fe-452a-87fc-6c76edcaf71c"
     },
     {
         "document_summary": "The document discusses the technical aspects of a model named Kimi K2, focusing on its training, post-training, and reinforcement learning processes. It details the activation CPU offload mechanism, training recipe, supervised fine-tuning, and reinforcement learning strategies. The document also covers the data synthesis pipeline for tool use, domain evolution, agent diversification, and the infrastructure supporting these processes. It concludes with evaluations of Kimi-K2-Instruct against various benchmarks, highlighting its performance in coding, tool use, math & STEM tasks, and general tasks.",
@@ -265,7 +265,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "49c5ca50-4db1-450f-9416-c17ce567e391"
+        "doc_id": "72338643-fe0a-477d-b931-211153c814fb"
     },
     {
         "document_summary": "The document discusses the technical aspects of a model named Kimi K2, focusing on its training, post-training, and reinforcement learning processes. It details the activation CPU offload mechanism, training recipe, supervised fine-tuning, and reinforcement learning strategies. The document also covers the data synthesis pipeline for tool use, domain evolution, agent diversification, and the infrastructure supporting these processes. It concludes with evaluations of Kimi-K2-Instruct against various benchmarks, highlighting its performance in coding, tool use, math & STEM tasks, and general tasks.",
@@ -276,7 +276,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "a35cffbf-b3ef-4e1d-8f28-0923985e7619"
+        "doc_id": "27490bd3-465a-4ae6-8bc7-3ba9ecce0543"
     },
     {
         "document_summary": "The document discusses the technical aspects of a model named Kimi K2, focusing on its training, post-training, and reinforcement learning processes. It details the activation CPU offload mechanism, training recipe, supervised fine-tuning, and reinforcement learning strategies. The document also covers the data synthesis pipeline for tool use, domain evolution, agent diversification, and the infrastructure supporting these processes. It concludes with evaluations of Kimi-K2-Instruct against various benchmarks, highlighting its performance in coding, tool use, math & STEM tasks, and general tasks.",
@@ -298,7 +298,7 @@
             }
         ],
         "tables": [],
-        "doc_id": "8d946ba7-6370-4a3d-b548-bd2737ecf8b3"
+        "doc_id": "947cb93d-67c3-4aa2-85ea-427f72f741e0"
     },
     {
         "document_summary": "The document discusses the technical aspects of a model named Kimi K2, focusing on its training, post-training, and reinforcement learning processes. It details the activation CPU offload mechanism, training recipe, supervised fine-tuning, and reinforcement learning strategies. The document also covers the data synthesis pipeline for tool use, domain evolution, agent diversification, and the infrastructure supporting these processes. It concludes with evaluations of Kimi-K2-Instruct against various benchmarks, highlighting its performance in coding, tool use, math & STEM tasks, and general tasks.",
@@ -309,7 +309,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "c945cdfe-df85-4bdb-9aee-83c295b3b760"
+        "doc_id": "ece6385e-d1ce-459d-911d-ca8760c57b24"
     },
     {
         "document_summary": "The document discusses the technical aspects of a model named Kimi K2, focusing on its training, post-training, and reinforcement learning processes. It details the activation CPU offload mechanism, training recipe, supervised fine-tuning, and reinforcement learning strategies. The document also covers the data synthesis pipeline for tool use, domain evolution, agent diversification, and the infrastructure supporting these processes. It concludes with evaluations of Kimi-K2-Instruct against various benchmarks, highlighting its performance in coding, tool use, math & STEM tasks, and general tasks.",
@@ -327,7 +327,7 @@
                 "html_content": "<table><tr><td rowspan=\"2\">Benchmark</td><td colspan=\"3\">Open Source</td><td colspan=\"4\">Proprietary</td></tr><tr><td>Kimi-K2-Instruct</td><td>DeepSeek-V3-0324</td><td>Qwen3-235B-A22B</td><td>Claude Sonnet 4</td><td>Claude Opus 4</td><td>GPT-4.1</td><td>Gemini 2.5 Flash</td></tr><tr><td colspan=\"8\">Coding Tasks</td></tr><tr><td>LiveCodeBench v6 (Pass@1)</td><td>53.7</td><td>46.9</td><td>37.0</td><td>48.5</td><td>47.4</td><td>44.7</td><td>44.7</td></tr><tr><td>OJBench (Pass@1)</td><td>27.1</td><td>24.0</td><td>11.3</td><td>15.3</td><td>19.6</td><td>19.5</td><td>19.5</td></tr><tr><td>MultiPL-E (Pass@1)</td><td>85.7</td><td>83.1</td><td>78.2</td><td>88.6</td><td>89.6</td><td>86.7</td><td>85.6</td></tr><tr><td>SWE-bench Verified</td><td>51.8</td><td>36.6</td><td>39.4</td><td>50.2</td><td>53.0</td><td>40.8</td><td>32.6</td></tr><tr><td>Agentless-Single-Patch (Pass@1)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>SWE-bench Verified</td><td>65.8</td><td>38.8</td><td>34.4</td><td>72.7*</td><td>72.5*</td><td>54.6</td><td>\u2014</td></tr><tr><td>Agentic-Single-Attempt (Pass@1)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>SWE-bench Verified</td><td>71.6</td><td>\u2014</td><td>\u2014</td><td>80.2*</td><td>79.4*</td><td>\u2014</td><td>\u2014</td></tr><tr><td>Agentic-Multi-Attempt (Pass@1)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>SWE-bench Multilingual (Pass@1)</td><td>47.3</td><td>25.8</td><td>20.9</td><td>51.0</td><td>\u2014</td><td>31.5</td><td>\u2014</td></tr><tr><td>Multi-SWE-bench (Pass@1)</td><td>18.3</td><td>8.0</td><td>9.0</td><td>29.2</td><td>\u2014</td><td>11.7</td><td>14.0</td></tr><tr><td>SWE-Lancer (Pass@1)</td><td>39.1</td><td>30.5</td><td>24.1</td><td>40.8</td><td>\u2014</td><td>23.0</td><td>38.5</td></tr><tr><td>Paper Bench Code-Dev (Acc.)</td><td>27.8</td><td>12.2</td><td>13.2</td><td>43.3</td><td>\u2014</td><td>29.9</td><td>5.7</td></tr><tr><td>Terminal Bench In-House (Acc.)</td><td>30.0</td><td>\u2014</td><td>\u2014</td><td>35.5</td><td>43.2</td><td>8.3</td><td>\u2014</td></tr><tr><td>Terminal Bench Terminus (Acc.)</td><td>25.0</td><td>16.3</td><td>6.6</td><td>\u2014</td><td>\u2014</td><td>30.3</td><td>16.8</td></tr><tr><td>Aider-Polyglot (Acc.)</td><td>60.0</td><td>55.1</td><td>61.8</td><td>56.4</td><td>70.7</td><td>52.4</td><td>44.0</td></tr><tr><td colspan=\"8\">Tool Use Tasks</td></tr><tr><td>Tau2 retail (Avg@4)</td><td>70.6</td><td>69.1</td><td>57.0</td><td>75.0</td><td>81.8</td><td>74.8</td><td>64.3</td></tr><tr><td>Tau2 airline (Avg@4)</td><td>56.5</td><td>39.0</td><td>26.5</td><td>55.5</td><td>60.0</td><td>54.5</td><td>42.5</td></tr><tr><td>Tau2 telecom (Avg@4)</td><td>65.8</td><td>32.5</td><td>22.1</td><td>45.2</td><td>57.0</td><td>38.6</td><td>16.9</td></tr><tr><td>AceBench (Acc.)</td><td>76.5</td><td>72.7</td><td>70.5</td><td>76.2</td><td>75.6</td><td>80.1</td><td>74.5</td></tr><tr><td colspan=\"8\">Math &amp; STEM Tasks</td></tr><tr><td>AIME 2024 (Avg@64)</td><td>69.6</td><td>59.4*</td><td>40.1*</td><td>43.4</td><td>48.2</td><td>46.5</td><td>61.3</td></tr><tr><td>AIME 2025 (Avg@64)</td><td>49.5</td><td>46.7</td><td>24.7*</td><td>33.1*</td><td>33.9*</td><td>37.0</td><td>46.6</td></tr><tr><td>MATH-500 (Acc.)</td><td>97.4</td><td>94.0*</td><td>91.2*</td><td>94.0</td><td>94.4</td><td>92.4</td><td>95.4</td></tr><tr><td>HMMT 2025 (Avg@32)</td><td>38.8</td><td>27.5</td><td>11.9</td><td>15.9</td><td>15.9</td><td>19.4</td><td>34.7</td></tr><tr><td>CNMO 2024 (Avg@16)</td><td>74.3</td><td>74.7</td><td>48.6</td><td>60.4</td><td>57.6</td><td>56.6</td><td>75.0</td></tr><tr><td>PolyMath-en (Avg@4)</td><td>65.1</td><td>59.5</td><td>51.9</td><td>52.8</td><td>49.8</td><td>54.0</td><td>49.9</td></tr><tr><td>ZebraLogic (Acc.)</td><td>89.0</td><td>84.0</td><td>37.7*</td><td>79.7</td><td>59.3</td><td>58.5</td><td>57.9</td></tr><tr><td>AutoLogi (Acc.)</td><td>89.5</td><td>88.9</td><td>83.3*</td><td>89.8</td><td>86.1</td><td>88.2</td><td>84.1</td></tr><tr><td>GPQA-Diamond (Avg@8)</td><td>75.1</td><td>68.4*</td><td>62.9*</td><td>70.0*</td><td>74.9*</td><td>66.3</td><td>68.2</td></tr><tr><td>SuperGPQA (Acc.)</td><td>57.2</td><td>53.7</td><td>50.2</td><td>55.7</td><td>56.5</td><td>50.8</td><td>49.6</td></tr><tr><td>Humanity's Last Exam (Acc.)</td><td>4.7</td><td>5.2</td><td>5.7</td><td>5.8</td><td>7.1</td><td>3.7</td><td>5.6</td></tr><tr><td colspan=\"8\">General Tasks</td></tr><tr><td>MMLU (EM)</td><td>89.5</td><td>89.4</td><td>87.0</td><td>91.5</td><td>92.9</td><td>90.4</td><td>90.1</td></tr><tr><td>MMLU-Redux (EM)</td><td>92.7</td><td>90.5</td><td>89.2*</td><td>93.6</td><td>94.2</td><td>92.4</td><td>90.6</td></tr><tr><td>MMLU-Pro (EM)</td><td>81.1</td><td>81.2*</td><td>77.3</td><td>83.7</td><td>86.6</td><td>81.8</td><td>79.4</td></tr><tr><td>IFEval (Prompt Strict)</td><td>89.8</td><td>81.1</td><td>83.2*</td><td>87.6</td><td>87.4</td><td>88.0</td><td>84.3</td></tr><tr><td>Multi-Challenge (Acc.)</td><td>54.1</td><td>31.4</td><td>34.0</td><td>46.8</td><td>49.0</td><td>36.4</td><td>39.5</td></tr><tr><td>SimpleQA (Correct)</td><td>31.0</td><td>27.7</td><td>13.2</td><td>15.9</td><td>22.8</td><td>42.3</td><td>23.3</td></tr><tr><td>Livebench (Pass@1)</td><td>76.4</td><td>72.4</td><td>67.6</td><td>74.8</td><td>74.6</td><td>69.8</td><td>67.8</td></tr><tr><td>Arena Hard v2.0</td><td>54.5</td><td>39.9</td><td>39.9</td><td>51.6</td><td>59.7</td><td>51.7</td><td>48.7</td></tr><tr><td>Hard Prompt (Win rate)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Arena Hard v2.0</td><td>85.0</td><td>59.3</td><td>59.8</td><td>54.6</td><td>68.5</td><td>61.5</td><td>72.8</td></tr><tr><td>Creative Writing (Win rate)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>FACTS Grounding (Adjusted)</td><td>88.5</td><td>68.3</td><td>68.5</td><td>83.6</td><td>\u2014</td><td>79.2</td><td>86.6</td></tr><tr><td>HHEM v2.1 (1-Hallu.)</td><td>98.9</td><td>88.9</td><td>94.5</td><td>94.5</td><td>\u2014</td><td>96.7</td><td>97.8</td></tr><tr><td>FaithJudge (1-Hallu.)</td><td>92.6</td><td>83.4</td><td>75.7</td><td>83.0</td><td>\u2014</td><td>91.0</td><td>93.2</td></tr><tr><td>LongBench v2 (Acc.)</td><td>49.1</td><td>51.1</td><td>\u2014</td><td>52.5</td><td>\u2014</td><td>54.3</td><td>55.5</td></tr><tr><td>FRAMES (Acc.)</td><td>77.1</td><td>79.2</td><td>\u2014</td><td>76.3</td><td>\u2014</td><td>87.4</td><td>72.9</td></tr><tr><td>MRCR (Acc.)</td><td>55.0</td><td>50.8</td><td>\u2014</td><td>74.4</td><td>\u2014</td><td>66.9</td><td>81.7</td></tr><tr><td>DROP (Acc.)</td><td>93.5</td><td>91.2</td><td>84.3</td><td>92.0</td><td>\u2014</td><td>79.1</td><td>81.7</td></tr></table>"
             }
         ],
-        "doc_id": "e1c08642-11dc-4611-bfd4-db17d1de4f93"
+        "doc_id": "f795e62d-e7be-4cf5-8bca-02b12f84476d"
     },
     {
         "document_summary": "The document presents a comprehensive evaluation of the Kimi-K2-Instruct and Kimi-K2-Base models, highlighting their superior performance across various benchmarks and tasks. Kimi-K2-Instruct excels in multi-turn tool-use benchmarks, general capabilities, and open-ended evaluations, outperforming all baselines in grounded, controlled, and agent-driven tool orchestration. It also shows strong, balanced performance across general knowledge, math, instruction following, and long-context tasks. Kimi-K2-Base demonstrates state-of-the-art performance in general language understanding, coding capabilities, mathematical reasoning, and Chinese language understanding. The document also details the evaluation settings and results for Kimi-K2-Base, showcasing its leading performance across diverse evaluation benchmarks. Additionally, it discusses safety evaluations, limitations, and conclusions, acknowledging the support of the OpenHands and Multi-SWE-bench teams.",
@@ -338,7 +338,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "a9ff44b5-032b-4729-abb1-a873c5dcca3c"
+        "doc_id": "2e42e263-09ea-4aa8-9d34-eefd388cc950"
     },
     {
         "document_summary": "The document presents a comprehensive evaluation of the Kimi-K2-Instruct and Kimi-K2-Base models, highlighting their superior performance across various benchmarks and tasks. Kimi-K2-Instruct excels in multi-turn tool-use benchmarks, general capabilities, and open-ended evaluations, outperforming all baselines in grounded, controlled, and agent-driven tool orchestration. It also shows strong, balanced performance across general knowledge, math, instruction following, and long-context tasks. Kimi-K2-Base demonstrates state-of-the-art performance in general language understanding, coding capabilities, mathematical reasoning, and Chinese language understanding. The document also details the evaluation settings and results for Kimi-K2-Base, showcasing its leading performance across diverse evaluation benchmarks. Additionally, it discusses safety evaluations, limitations, and conclusions, acknowledging the support of the OpenHands and Multi-SWE-bench teams.",
@@ -356,7 +356,7 @@
                 "html_content": "<table><tr><td></td><td>Benchmark (Metric)</td><td>#Shots</td><td>Kimi-K2-Base</td><td>DeepSeek-V3-Base</td><td>Llama4-Maverick-Base</td><td>Qwen2.5-72B-Base</td></tr><tr><td></td><td>Architecture</td><td>-</td><td>MoE</td><td>MoE</td><td>MoE</td><td>Dense</td></tr><tr><td></td><td># Activated Params</td><td>-</td><td>32B</td><td>37B</td><td>17B</td><td>72B</td></tr><tr><td></td><td># Total Params</td><td>-</td><td>1043B</td><td>671B</td><td>400B</td><td>72B</td></tr><tr><td rowspan=\"12\">English</td><td>MMLU</td><td>5-shots</td><td>87.79</td><td>87.10</td><td>84.87</td><td>86.08</td></tr><tr><td>MMLU-pro</td><td>5-shots</td><td>69.17</td><td>60.59</td><td>63.47</td><td>62.80</td></tr><tr><td>MMLU-reflux</td><td>5-shots</td><td>90.17</td><td>89.53</td><td>88.18</td><td>87.77</td></tr><tr><td>SuperGPQA</td><td>5-shots</td><td>44.67</td><td>39.20</td><td>38.84</td><td>34.23</td></tr><tr><td>GPQA-Diamond(avg@s)</td><td>5-shots</td><td>48.11</td><td>50.51</td><td>49.43</td><td>40.78</td></tr><tr><td>SimpleQA</td><td>5-shots</td><td>35.25</td><td>26.49</td><td>23.74</td><td>10.31</td></tr><tr><td>TriviaQA</td><td>5-shots</td><td>85.09</td><td>84.11</td><td>79.25</td><td>76.03</td></tr><tr><td>BBH</td><td>3-shots</td><td>88.71</td><td>88.37</td><td>87.10</td><td>84.09</td></tr><tr><td>HellaSwag</td><td>5-shots</td><td>94.60</td><td>89.44</td><td>86.02</td><td>95.27</td></tr><tr><td>AGIEval</td><td>-</td><td>84.23</td><td>81.57</td><td>67.55</td><td>76.87</td></tr><tr><td>ARC-Challenge</td><td>0-shot</td><td>95.73</td><td>93.77</td><td>94.03</td><td>95.56</td></tr><tr><td>WinoGrande</td><td>5-shots</td><td>85.32</td><td>84.21</td><td>77.58</td><td>84.14</td></tr><tr><td rowspan=\"4\">Code</td><td>CRUXEval-I-cot</td><td>0-shots</td><td>74.00</td><td>62.75</td><td>67.13</td><td>61.12</td></tr><tr><td>CRUXEval-O-cot</td><td>0-shots</td><td>83.50</td><td>75.25</td><td>75.88</td><td>66.13</td></tr><tr><td>LiveCodeBench(v6)</td><td>1-shots</td><td>26.29</td><td>24.57</td><td>25.14</td><td>22.29</td></tr><tr><td>EvalPlus</td><td>-</td><td>80.33</td><td>65.61</td><td>65.48</td><td>66.04</td></tr><tr><td rowspan=\"4\">Math</td><td>MATH</td><td>4-shots</td><td>70.22</td><td>61.70</td><td>63.02</td><td>62.68</td></tr><tr><td>GSM8k</td><td>8-shots</td><td>92.12</td><td>91.66</td><td>86.35</td><td>90.37</td></tr><tr><td>GSM8k-platinum</td><td>8-shots</td><td>94.21</td><td>93.38</td><td>88.83</td><td>92.47</td></tr><tr><td>CMATH</td><td>6-shots</td><td>90.26</td><td>90.53</td><td>88.07</td><td>86.98</td></tr><tr><td rowspan=\"3\">Chinese</td><td>C-Eval</td><td>5-shots</td><td>92.50</td><td>90.04</td><td>80.91</td><td>90.86</td></tr><tr><td>CMMLU</td><td>5-shots</td><td>90.90</td><td>88.84</td><td>81.24</td><td>90.55</td></tr><tr><td>CSimpleQA</td><td>5-shots</td><td>77.57</td><td>72.13</td><td>53.47</td><td>50.53</td></tr></table>"
             }
         ],
-        "doc_id": "8d25ad41-f1a1-4478-8795-787ef081972e"
+        "doc_id": "69980c8d-f414-4ee0-8447-f9537013d838"
     },
     {
         "document_summary": "The document presents a comprehensive evaluation of the Kimi-K2-Instruct and Kimi-K2-Base models, highlighting their superior performance across various benchmarks and tasks. Kimi-K2-Instruct excels in multi-turn tool-use benchmarks, general capabilities, and open-ended evaluations, outperforming all baselines in grounded, controlled, and agent-driven tool orchestration. It also shows strong, balanced performance across general knowledge, math, instruction following, and long-context tasks. Kimi-K2-Base demonstrates state-of-the-art performance in general language understanding, coding capabilities, mathematical reasoning, and Chinese language understanding. The document also details the evaluation settings and results for Kimi-K2-Base, showcasing its leading performance across diverse evaluation benchmarks. Additionally, it discusses safety evaluations, limitations, and conclusions, acknowledging the support of the OpenHands and Multi-SWE-bench teams.",
@@ -379,7 +379,7 @@
                 "html_content": "<table><tr><td>Plugin</td><td>Strategy</td><td>Kimi-K2-Instruct</td><td>DeepSeek-V3-0324</td><td>DeepSeek-R1</td><td>Qwen3-235B-A22B</td></tr><tr><td rowspan=\"5\">Harmful</td><td>Basic</td><td>98.04</td><td>90.45</td><td>99.02</td><td>98.53</td></tr><tr><td>Base64</td><td>100</td><td>90.20</td><td>100</td><td>100</td></tr><tr><td>Prompt Injection</td><td>93.14</td><td>100</td><td>95.10</td><td>99.02</td></tr><tr><td>Iterative Jailbreak</td><td>92.16</td><td>66.67</td><td>72.55</td><td>74.51</td></tr><tr><td>Crescendo</td><td>64.71</td><td>64.71</td><td>80.39</td><td>86.27</td></tr><tr><td rowspan=\"5\">Criminal</td><td>Basic</td><td>100</td><td>99.62</td><td>95.45</td><td>99.24</td></tr><tr><td>Base64</td><td>96.97</td><td>89.39</td><td>84.85</td><td>98.48</td></tr><tr><td>Prompt Injection</td><td>75.76</td><td>91.67</td><td>69.70</td><td>98.47</td></tr><tr><td>Iterative Jailbreak</td><td>57.57</td><td>21.21</td><td>25.76</td><td>53.03</td></tr><tr><td>Crescendo</td><td>56.06</td><td>31.81</td><td>42.42</td><td>59.09</td></tr><tr><td rowspan=\"5\">Misinformation</td><td>Basic</td><td>97.28</td><td>92.57</td><td>92.46</td><td>94.84</td></tr><tr><td>Base64</td><td>98.48</td><td>90.48</td><td>96.83</td><td>93.65</td></tr><tr><td>Prompt Injection</td><td>98.39</td><td>86.51</td><td>93.65</td><td>93.65</td></tr><tr><td>Iterative Jailbreak</td><td>63.97</td><td>53.97</td><td>84.13</td><td>69.84</td></tr><tr><td>Crescendo</td><td>85.71</td><td>55.56</td><td>88.89</td><td>84.13</td></tr><tr><td rowspan=\"5\">Privacy</td><td>Basic</td><td>100</td><td>100</td><td>100</td><td>100</td></tr><tr><td>Base64</td><td>100</td><td>100</td><td>100</td><td>100</td></tr><tr><td>Prompt Injection</td><td>88.33</td><td>98.33</td><td>100</td><td>91.67</td></tr><tr><td>Iterative Jailbreak</td><td>76.67</td><td>100</td><td>93.33</td><td>96.67</td></tr><tr><td>Crescendo</td><td>96.67</td><td>100</td><td>96.67</td><td>100</td></tr><tr><td rowspan=\"5\">Security</td><td>Basic</td><td>77.84</td><td>75.57</td><td>70.46</td><td>90.09</td></tr><tr><td>Base64</td><td>82.93</td><td>82.93</td><td>63.41</td><td>95.12</td></tr><tr><td>Prompt Injection</td><td>87.80</td><td>97.56</td><td>65.85</td><td>84.13</td></tr><tr><td>Iterative Jailbreak</td><td>43.90</td><td>60.97</td><td>43.90</td><td>78.04</td></tr><tr><td>Crescendo</td><td>68.29</td><td>87.80</td><td>68.29</td><td>87.80</td></tr></table>"
             }
         ],
-        "doc_id": "10829757-b697-44ac-9f6e-e48560aa07fd"
+        "doc_id": "8e88e8a4-0f6d-4cd7-973f-a3f927684dbe"
     },
     {
         "document_summary": "The document presents a comprehensive evaluation of the Kimi-K2-Instruct and Kimi-K2-Base models, highlighting their superior performance across various benchmarks and tasks. Kimi-K2-Instruct excels in multi-turn tool-use benchmarks, general capabilities, and open-ended evaluations, outperforming all baselines in grounded, controlled, and agent-driven tool orchestration. It also shows strong, balanced performance across general knowledge, math, instruction following, and long-context tasks. Kimi-K2-Base demonstrates state-of-the-art performance in general language understanding, coding capabilities, mathematical reasoning, and Chinese language understanding. The document also details the evaluation settings and results for Kimi-K2-Base, showcasing its leading performance across diverse evaluation benchmarks. Additionally, it discusses safety evaluations, limitations, and conclusions, acknowledging the support of the OpenHands and Multi-SWE-bench teams.",
@@ -390,7 +390,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "188999b4-4dda-436d-b2a6-dc0322921a31"
+        "doc_id": "e444583d-0e8a-461f-b79e-74abb4a16eae"
     },
     {
         "document_summary": "The document presents a comprehensive evaluation of the Kimi-K2-Instruct and Kimi-K2-Base models, highlighting their superior performance across various benchmarks and tasks. Kimi-K2-Instruct excels in multi-turn tool-use benchmarks, general capabilities, and open-ended evaluations, outperforming all baselines in grounded, controlled, and agent-driven tool orchestration. It also shows strong, balanced performance across general knowledge, math, instruction following, and long-context tasks. Kimi-K2-Base demonstrates state-of-the-art performance in general language understanding, coding capabilities, mathematical reasoning, and Chinese language understanding. The document also details the evaluation settings and results for Kimi-K2-Base, showcasing its leading performance across diverse evaluation benchmarks. Additionally, it discusses safety evaluations, limitations, and conclusions, acknowledging the support of the OpenHands and Multi-SWE-bench teams.",
@@ -401,7 +401,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "704a087b-c96b-4f6d-a621-633518f8cb33"
+        "doc_id": "3e1b057e-33ab-45c2-9070-d2340edf0875"
     },
     {
         "document_summary": "The document presents a comprehensive evaluation of the Kimi-K2-Instruct and Kimi-K2-Base models, highlighting their superior performance across various benchmarks and tasks. Kimi-K2-Instruct excels in multi-turn tool-use benchmarks, general capabilities, and open-ended evaluations, outperforming all baselines in grounded, controlled, and agent-driven tool orchestration. It also shows strong, balanced performance across general knowledge, math, instruction following, and long-context tasks. Kimi-K2-Base demonstrates state-of-the-art performance in general language understanding, coding capabilities, mathematical reasoning, and Chinese language understanding. The document also details the evaluation settings and results for Kimi-K2-Base, showcasing its leading performance across diverse evaluation benchmarks. Additionally, it discusses safety evaluations, limitations, and conclusions, acknowledging the support of the OpenHands and Multi-SWE-bench teams.",
@@ -412,7 +412,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "05125e87-095c-45b3-8b90-6f35370ec69e"
+        "doc_id": "ff7b7979-440f-409a-8312-fdc37c6877e5"
     },
     {
         "document_summary": "The document presents a comprehensive evaluation of the Kimi-K2-Instruct and Kimi-K2-Base models, highlighting their superior performance across various benchmarks and tasks. Kimi-K2-Instruct excels in multi-turn tool-use benchmarks, general capabilities, and open-ended evaluations, outperforming all baselines in grounded, controlled, and agent-driven tool orchestration. It also shows strong, balanced performance across general knowledge, math, instruction following, and long-context tasks. Kimi-K2-Base demonstrates state-of-the-art performance in general language understanding, coding capabilities, mathematical reasoning, and Chinese language understanding. The document also details the evaluation settings and results for Kimi-K2-Base, showcasing its leading performance across diverse evaluation benchmarks. Additionally, it discusses safety evaluations, limitations, and conclusions, acknowledging the support of the OpenHands and Multi-SWE-bench teams.",
@@ -423,7 +423,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "34cb608d-0d29-444e-bb6f-e0f82e54e910"
+        "doc_id": "eb6a07ae-9d97-41ae-9946-3df9030b24a1"
     },
     {
         "document_summary": "The document presents a comprehensive evaluation of the Kimi-K2-Instruct and Kimi-K2-Base models, highlighting their superior performance across various benchmarks and tasks. Kimi-K2-Instruct excels in multi-turn tool-use benchmarks, general capabilities, and open-ended evaluations, outperforming all baselines in grounded, controlled, and agent-driven tool orchestration. It also shows strong, balanced performance across general knowledge, math, instruction following, and long-context tasks. Kimi-K2-Base demonstrates state-of-the-art performance in general language understanding, coding capabilities, mathematical reasoning, and Chinese language understanding. The document also details the evaluation settings and results for Kimi-K2-Base, showcasing its leading performance across diverse evaluation benchmarks. Additionally, it discusses safety evaluations, limitations, and conclusions, acknowledging the support of the OpenHands and Multi-SWE-bench teams.",
@@ -434,7 +434,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "1a0a6e0a-a35e-4951-9216-5a2244225eb7"
+        "doc_id": "7ea1068d-e1c4-40ba-be75-50f7b69ab02e"
     },
     {
         "document_summary": "The document presents a technical report on Kimi K2, detailing its contributions, token template for tool calling, evaluation details, and other technical aspects. It includes a list of authors, an explanation of the token structure for tool calling, and performance metrics across various benchmarks. The report highlights Kimi K2's superior performance in coding tasks, tool use tasks, math and STEM tasks, general tasks, and long context and factuality tasks. It also discusses the minimal impact of QK-Clip on model quality and the engine switching pipeline for RL training.",
@@ -583,7 +583,7 @@
                 "html_content": "<table><tr><td>Yifan Bai</td><td>Guokun Lai</td><td>Shengyuan Shi</td><td>Ziyao Xu</td></tr><tr><td>Yiping Bao</td><td>Cheng Li</td><td>Feifan Song</td><td>Junjie Yan</td></tr><tr><td>Guanduo Chen</td><td>Fang Li</td><td>Jianlin Su</td><td>Yuzi Yan</td></tr><tr><td>Jiahao Chen</td><td>Haoyang Li</td><td>Zhengyuan Su</td><td>Xiaofei Yang</td></tr><tr><td>Ningxin Chen</td><td>Ming Li</td><td>Xinjie Sun*</td><td>Ying Yang</td></tr><tr><td>Ruijue Chen</td><td>Wentao Li</td><td>Flood Sung</td><td>Zhen Yang</td></tr><tr><td>Yanru Chen</td><td>Yanhao Li</td><td>Heyi Tang</td><td>Zhilin Yang</td></tr><tr><td>Yuankun Chen</td><td>Yiwei Li</td><td>Jiawen Tao</td><td>Zonghan Yang</td></tr><tr><td>Yutian Chen</td><td>Zhaowei Li</td><td>Qifeng Teng</td><td>Haotian Yao</td></tr><tr><td>Zhuofu Chen*</td><td>Zheming Li</td><td>Chensi Wang</td><td>Xingcheng Yao</td></tr><tr><td>Jialei Cui</td><td>Hongzhan Lin*</td><td>Dinglu Wang</td><td>Wenjie Ye</td></tr><tr><td>Hao Ding</td><td>Xiaohan Lin</td><td>Feng Wang</td><td>Zhuorui Ye</td></tr><tr><td>Mengnan Dong</td><td>Zongyu Lin</td><td>Haiming Wang</td><td>Bohong Yin</td></tr><tr><td>Ang'ang Du</td><td>Chengyin Liu</td><td>Jianzhou Wang*</td><td>Longhui Yu</td></tr><tr><td>Chenzhuang Du</td><td>Chenyu Liu</td><td>Jiaxing Wang</td><td>Enming Yuan</td></tr><tr><td>Dikang Du</td><td>Hongzhang Liu</td><td>Jinhong Wang</td><td>Hongbang Yuan*</td></tr><tr><td>Yulun Du</td><td>Jingyuan Liu*</td><td>Shengjie Wang</td><td>Mengjie Yuan</td></tr><tr><td>Yu Fan</td><td>Junqi Liu</td><td>Shuyi Wang</td><td>Haobing Zhan</td></tr><tr><td>Yichen Feng</td><td>Liang Liu</td><td>Yao Wang</td><td>Dehao Zhang</td></tr><tr><td>Kelin Fu</td><td>Shaowei Liu</td><td>Yejie Wang</td><td>Hao Zhang</td></tr><tr><td>Bofei Gao</td><td>T.Y. Liu</td><td>Yiqin Wang</td><td>Wanlu Zhang</td></tr><tr><td>Hongcheng Gao</td><td>Tianwei Liu</td><td>Yuxin Wang</td><td>Xiaobin Zhang</td></tr><tr><td>Peizhong Gao</td><td>Weizhou Liu</td><td>Yuzhi Wang</td><td>Yangkun Zhang</td></tr><tr><td>Tong Gao</td><td>Yangyang Liu</td><td>Zhaoji Wang</td><td>Yizhi Zhang</td></tr><tr><td>Xinran Gu</td><td>Yibo Liu</td><td>Zhengtao Wang</td><td>Yongting Zhang</td></tr><tr><td>Longyu Guan</td><td>Yiping Liu</td><td>Zhexu Wang</td><td>Yu Zhang</td></tr><tr><td>Haiqing Guo*</td><td>Yue Liu</td><td>Chu Wei</td><td>Yutao Zhang</td></tr><tr><td>Jianhang Guo</td><td>Zhengying Liu</td><td>Qianqian Wei</td><td>Yutong Zhang</td></tr><tr><td>Hao Hu</td><td>Enzhe Lu</td><td>Wenhao Wu</td><td>Zheng Zhang</td></tr><tr><td>Xiaoru Hao</td><td>Lijun Lu</td><td>Xingzhe Wu</td><td>Haotian Zhao</td></tr><tr><td>Tianhong He</td><td>Shengling Ma</td><td>Yuxin Wu</td><td>Yikai Zhao</td></tr><tr><td>Weiran He</td><td>Xinyu Ma</td><td>Chenjun Xiao</td><td>Huabin Zheng</td></tr><tr><td>Wenyang He</td><td>Yingwei Ma</td><td>Xiaotong Xie</td><td>Shaojie Zheng</td></tr><tr><td>Chao Hong</td><td>Shaoguang Mao</td><td>Weimin Xiong*</td><td>Jianren Zhou</td></tr><tr><td>Yangyang Hu</td><td>Jie Mei</td><td>Boyu Xu</td><td>Xinyu Zhou</td></tr><tr><td>Zhenxing Hu</td><td>Xin Men</td><td>Jing Xu*</td><td>Zaida Zhou</td></tr><tr><td>Weixiao Huang</td><td>Yibo Miao</td><td>Jinjing Xu</td><td>Zhen Zhu</td></tr><tr><td>Zhiqi Huang</td><td>Siyuan Pan</td><td>L.H. Xu</td><td>Weiyu Zhuang</td></tr><tr><td>Zihao Huang</td><td>Yebo Peng</td><td>Lin Xu</td><td>Xinxing Zu</td></tr><tr><td>Tao Jiang</td><td>Ruoyu Qin</td><td>Suting Xu</td><td>Kimi K2</td></tr><tr><td>Zhejun Jiang</td><td>Bowen Qu</td><td>Weixin Xu</td><td></td></tr><tr><td>Xinyi Jin</td><td>Zeyu Shang</td><td>Xinran Xu</td><td></td></tr><tr><td>Yongsheng Kang*</td><td>Lidong Shi</td><td>Yangchuan Xu</td><td></td></tr></table>"
             }
         ],
-        "doc_id": "13c88c7c-8cfc-494a-9c9e-5d5390ddcf12"
+        "doc_id": "4afd9440-639b-4d1e-b520-a886189a730d"
     },
     {
         "document_summary": "The document presents a technical report on Kimi K2, detailing its contributions, token template for tool calling, evaluation details, and other technical aspects. It includes a list of authors, an explanation of the token structure for tool calling, and performance metrics across various benchmarks. The report highlights Kimi K2's superior performance in coding tasks, tool use tasks, math and STEM tasks, general tasks, and long context and factuality tasks. It also discusses the minimal impact of QK-Clip on model quality and the engine switching pipeline for RL training.",
@@ -725,7 +725,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "8bee22b6-b1e9-4798-ae15-03f5c2880a10"
+        "doc_id": "e17e3f3a-99a6-4f04-af41-4b3d23cecf28"
     },
     {
         "document_summary": "The document presents a technical report on Kimi K2, detailing its contributions, token template for tool calling, evaluation details, and other technical aspects. It includes a list of authors, an explanation of the token structure for tool calling, and performance metrics across various benchmarks. The report highlights Kimi K2's superior performance in coding tasks, tool use tasks, math and STEM tasks, general tasks, and long context and factuality tasks. It also discusses the minimal impact of QK-Clip on model quality and the engine switching pipeline for RL training.",
@@ -867,7 +867,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "17388dac-1ed5-44ae-b304-39ed99bd717a"
+        "doc_id": "818d2dbf-ad84-4d2f-9c34-db04781dbfa3"
     },
     {
         "document_summary": "The document presents a technical report on Kimi K2, detailing its contributions, token template for tool calling, evaluation details, and other technical aspects. It includes a list of authors, an explanation of the token structure for tool calling, and performance metrics across various benchmarks. The report highlights Kimi K2's superior performance in coding tasks, tool use tasks, math and STEM tasks, general tasks, and long context and factuality tasks. It also discusses the minimal impact of QK-Clip on model quality and the engine switching pipeline for RL training.",
@@ -1009,7 +1009,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "35cf81ee-487b-422b-9a30-5a22b20ab903"
+        "doc_id": "3a0b0a84-3a39-4c60-8d4c-0c4cac736e54"
     },
     {
         "document_summary": "The document presents a technical report on Kimi K2, detailing its contributions, token template for tool calling, evaluation details, and other technical aspects. It includes a list of authors, an explanation of the token structure for tool calling, and performance metrics across various benchmarks. The report highlights Kimi K2's superior performance in coding tasks, tool use tasks, math and STEM tasks, general tasks, and long context and factuality tasks. It also discusses the minimal impact of QK-Clip on model quality and the engine switching pipeline for RL training.",
@@ -1162,7 +1162,7 @@
             }
         ],
         "tables": [],
-        "doc_id": "d4964939-5cef-4847-85ea-6b8bfd39e70f"
+        "doc_id": "e9aadc9c-cad3-4a93-b0fb-953793981e24"
     },
     {
         "document_summary": "The document presents a technical report on Kimi K2, detailing its contributions, token template for tool calling, evaluation details, and other technical aspects. It includes a list of authors, an explanation of the token structure for tool calling, and performance metrics across various benchmarks. The report highlights Kimi K2's superior performance in coding tasks, tool use tasks, math and STEM tasks, general tasks, and long context and factuality tasks. It also discusses the minimal impact of QK-Clip on model quality and the engine switching pipeline for RL training.",
@@ -1315,7 +1315,7 @@
             }
         ],
         "tables": [],
-        "doc_id": "c4d12e14-0cba-4a51-9538-20bb273a58a0"
+        "doc_id": "d2fc8921-c5d7-4b54-a9e9-32fb339723d0"
     },
     {
         "document_summary": "The document presents a technical report on Kimi K2, detailing its contributions, token template for tool calling, evaluation details, and other technical aspects. It includes a list of authors, an explanation of the token structure for tool calling, and performance metrics across various benchmarks. The report highlights Kimi K2's superior performance in coding tasks, tool use tasks, math and STEM tasks, general tasks, and long context and factuality tasks. It also discusses the minimal impact of QK-Clip on model quality and the engine switching pipeline for RL training.",
@@ -1457,7 +1457,7 @@
         "table_ids": [],
         "images": [],
         "tables": [],
-        "doc_id": "d81fddc3-6c63-4e4b-9d80-435799f0620b"
+        "doc_id": "0a3c59e5-178e-4635-813f-b8bb86642cd4"
     },
     {
         "document_summary": "The document presents a technical report on Kimi K2, detailing its contributions, token template for tool calling, evaluation details, and other technical aspects. It includes a list of authors, an explanation of the token structure for tool calling, and performance metrics across various benchmarks. The report highlights Kimi K2's superior performance in coding tasks, tool use tasks, math and STEM tasks, general tasks, and long context and factuality tasks. It also discusses the minimal impact of QK-Clip on model quality and the engine switching pipeline for RL training.",
@@ -1628,6 +1628,6 @@
             }
         ],
         "tables": [],
-        "doc_id": "de4a4817-35cc-4d01-88fb-1a10c3c84dee"
+        "doc_id": "338c1104-b2c5-463f-9657-45ae33eae4a9"
     }
 ]
