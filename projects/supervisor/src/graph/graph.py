@@ -63,7 +63,7 @@ async def make_graph(
 
         return Command(
             goto="supervisor",
-            update={"messages": HumanMessage(content=last_msg.content)},
+            update={"messages": [HumanMessage(content=last_msg.content)]},
         )
 
     async def calendar_node(state: AgentState)-> Command[Literal["supervisor"]]:  # return to supervisor 
@@ -73,7 +73,7 @@ async def make_graph(
 
         return Command(
             goto="supervisor",
-            update={"messages": HumanMessage(content=last_msg.content)},
+            update={"messages": [HumanMessage(content=last_msg.content)]},
         )
     
     async def github_node(state: AgentState)-> Command[Literal["supervisor"]]:  # return to supervisor 
@@ -83,7 +83,7 @@ async def make_graph(
 
         return Command(
             goto="supervisor",
-            update={"messages": HumanMessage(content=last_msg.content)},
+            update={"messages": [HumanMessage(content=last_msg.content)]},
         )
 
     # ======= GRAPH  BUILDING =======

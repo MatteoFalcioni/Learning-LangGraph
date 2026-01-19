@@ -1,6 +1,6 @@
 from typing import Annotated
-from langchain.tools import tool, ToolRuntime
-from langchain_core.messages import ToolMessage, HumanMessage
+from langchain.tools import tool
+from langchain_core.messages import HumanMessage
 from langgraph.types import Command
 
 # helper function to create handoff tool
@@ -14,7 +14,6 @@ def create_handoff_tool(
     @tool(name, description=description)
     def handoff_tool(
         task: Annotated[str, "The task that the subagent should perform"],
-        runtime: ToolRuntime,
     ) -> Command:
 
         task_msg = HumanMessage(
