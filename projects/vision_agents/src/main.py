@@ -36,8 +36,7 @@ if __name__ == "__main__":
                 result = stream_graph(
                     graph=graph,
                     query=user_query,
-                    config=config,
-                    timeout_seconds=120
+                    config=config
                 )
                 
                 if not result:

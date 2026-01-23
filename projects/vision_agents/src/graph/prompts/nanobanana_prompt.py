@@ -16,4 +16,6 @@ Visual Style Requirements:
 - **Text**: Neat, professional handwriting. No generic fonts.
 
 You will get an example image of the visual style you should follow. 
+
+Generate the image and return a one-sentence description of what you drew.
 """

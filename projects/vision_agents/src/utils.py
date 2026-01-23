@@ -87,43 +87,94 @@ def nanobanana_generate(state: MyState, nanobanana_prompt: str) -> list[str]:
     example_file_path = example_files[0]
     with open(example_file_path, "rb") as f:
         example_img = base64.b64encode(f.read()).decode("utf-8")
-    response = client.chat.completions.create(
-        model="google/gemini-3-pro-image-preview",
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text", 
-                        "text": nanobanana_prompt
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:application/pdf;base64,{state.get('pdf_base64')}"
+    
+    # response = client.chat.completions.create(
+    #     model="google/gemini-3-pro-image-preview",
+    #     messages=[
+    #         {
+    #             "role": "user",
+    #             "content": [
+    #                 {
+    #                     "type": "text", 
+    #                     "text": nanobanana_prompt
+    #                 },
+    #                 {
+    #                     "type": "image_url",
+    #                     "image_url": {
+    #                         "url": f"data:application/pdf;base64,{state.get('pdf_base64')}"
+    #                     }
+    #                 },
+    #                 {
+    #                     "type": "image_url",
+    #                     "image_url": {
+    #                         "url": f"data:image/jpeg;base64,{example_img}"
+    #                     }
+    #                 }
+    #             ]
+    #         }
+    #     ],
+    #     extra_body={"modalities": ["image", "text"]}
+    # )
+
+    #     extra_body={"modalities": ["image", "text"]}
+    # )
+
+    # NOTE: We use requests directly because the OpenAI client drops the 'images' field
+    # from the response since it's not part of the standard OpenAI schema.
+    import json
+    
+    response = requests.post(
+        url="https://openrouter.ai/api/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+            "Content-Type": "application/json",
+        },
+        data=json.dumps({
+            "model": "google/gemini-2.5-flash-image",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text", 
+                            "text": nanobanana_prompt
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:application/pdf;base64,{state.get('pdf_base64')}"
+                            }
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{example_img}"
+                            }
                         }
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/jpeg;base64,{example_img}"
-                        }
-                    }
-                ]
-            }
-        ],
-        extra_body={"modalities": ["image", "text"]}
+                    ]
+                }
+            ],
+            "modalities": ["image", "text"]
+        })
     )
 
-    image_urls = []
-    response = response.choices[0].message
-    if response.images:
-        for image in response.images:
-            image_url = image['image_url']['url']  # Base64 data URL
-            image_urls.append(image_url)
-    else:
-        raise RuntimeError("Failed to generate image")
+    if response.status_code != 200:
+        raise RuntimeError(f"API request failed: {response.text}")
 
+    result = response.json()
+    image_urls = []
+    
+    if result.get("choices"):
+        message = result["choices"][0]["message"]
+        if message.get("images"):
+            for image in message["images"]:
+                image_url = image['image_url']['url']  # Base64 data URL
+                image_urls.append(image_url)
+        else:
+             raise RuntimeError(f"No images in response: {result}")
+    else:
+        raise RuntimeError(f"Invalid response format: {result}")
+    
     return image_urls
 
 # Color mapping for different nodes
