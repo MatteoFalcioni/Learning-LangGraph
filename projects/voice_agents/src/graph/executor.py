@@ -4,16 +4,18 @@ Handles graph streaming, interrupts, and output formatting.
 """
 import sys
 from pathlib import Path
+import threading
 
 # Add src directory to Python path for absolute imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+import asyncio
 from langgraph.types import Command
 from TTS.tts import read_text
-from utils import clean_transcript_tts, parse_for_interrupt, rich_print, console, clean_transcript_display, clean_transcript_tts
+from utils import clean_transcript_tts, parse_for_interrupt, rich_print, console, clean_transcript_display
 
 
-def handle_stream_output(node_name, values, tts_engine=None):
+async def handle_stream_output(node_name, values, tts_engine=None, tts_lock: threading.Event = None):
     """
     Handle output from a graph stream event.
     
@@ -21,6 +23,7 @@ def handle_stream_output(node_name, values, tts_engine=None):
         node_name: Name of the node producing output
         values: Output values from the node
         tts_engine: Optional TTS engine to speak the output
+        tts_lock: Optional threading.Event to coordinate TTS with STT
     
     Returns:
         The message content if available, None otherwise
@@ -33,7 +36,9 @@ def handle_stream_output(node_name, values, tts_engine=None):
                 
                 # If TTS is enabled, speak the content
                 if tts_engine:
-                    read_text(clean_transcript_tts(msg.content), tts_engine)
+                    # Run blocking TTS in a separate thread so we don't block the async event loop
+                    # This allows the STT loop to keep running and discarding audio while TTS plays
+                    await asyncio.to_thread(read_text, clean_transcript_tts(msg.content), tts_engine, tts_lock)
                 
                 return msg.content
         elif isinstance(values, str):
@@ -45,7 +50,7 @@ def handle_stream_output(node_name, values, tts_engine=None):
     return None
 
 
-async def stream_graph_task(graph, transcript, config=None, pending_interrupt=None, tts_engine=None):
+async def stream_graph_task(graph, transcript, config=None, pending_interrupt=None, tts_engine=None, tts_lock: threading.Event = None):
     """
     Stream the graph execution with the user transcript.
     
@@ -55,6 +60,7 @@ async def stream_graph_task(graph, transcript, config=None, pending_interrupt=No
         config: The config to use for the graph.
         pending_interrupt: Dict to track if graph is interrupted (shared state).
         tts_engine: Optional TTS engine to speak graph outputs
+        tts_lock: Optional threading.Event to coordinate TTS with STT
     
     Returns:
         True if execution completed without interrupt, False if interrupted.
@@ -92,7 +98,7 @@ async def stream_graph_task(graph, transcript, config=None, pending_interrupt=No
                 stream_mode="updates"
             ):
                 for node_name, values in event.items():
-                    handle_stream_output(node_name, values, tts_engine)
+                    await handle_stream_output(node_name, values, tts_engine, tts_lock)
             
             # Clear the interrupt state after successful resume
             pending_interrupt['is_interrupted'] = False
@@ -111,7 +117,7 @@ async def stream_graph_task(graph, transcript, config=None, pending_interrupt=No
             stream_mode="updates"
         ):
             for node_name, values in event.items():
-                handle_stream_output(node_name, values, tts_engine)
+                await handle_stream_output(node_name, values, tts_engine, tts_lock)
         
         # After streaming completes, check if graph is interrupted
         state_snapshot = graph.get_state(config)

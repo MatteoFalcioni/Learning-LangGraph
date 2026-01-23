@@ -50,6 +50,11 @@ async def flux_stt(graph=None, config=None, tts_engine=None):
     # Queue to pass audio from microphone thread to async loop
     audio_queue = Queue()
     streaming = True
+    
+    # TTS lock: when set, STT is active (can send audio to Deepgram)
+    # when cleared, TTS is playing (should NOT send audio to Deepgram)
+    tts_lock = threading.Event()
+    tts_lock.set()  # Initially set = STT is active, TTS is not playing
 
     # Function to capture audio from microphone (runs in separate thread)
     def capture_audio():
@@ -107,14 +112,15 @@ async def flux_stt(graph=None, config=None, tts_engine=None):
                         
                         if graph:
                             # Run graph in async task so it doesn't block audio streaming
+                            # (!) stream_graph_task reads out the output with the TTS model
                             asyncio.create_task(
-                                stream_graph_task(graph, transcript, config, pending_interrupt, tts_engine)
+                                stream_graph_task(graph, transcript, config, pending_interrupt, tts_engine, tts_lock)
                             )
 
                         transcript = ""
                         
         # Register handlers
-        connection.on(EventType.MESSAGE, on_flux_message)
+        connection.on(EventType.MESSAGE, on_flux_message) # this is saying: whenever you get a message from the server, call this function
         connection.on(EventType.ERROR, lambda error: console.print(f"[bold red]Error:[/bold red] {error}"))
         connection.on(EventType.OPEN, lambda _: ready.set())
 
@@ -131,7 +137,17 @@ async def flux_stt(graph=None, config=None, tts_engine=None):
                 # Check if there's audio data in the queue
                 if not audio_queue.empty():
                     audio_data = audio_queue.get()
-                    await connection.send_media(audio_data)
+                    
+                    # Check if TTS is currently playing (lock is cleared)
+                    is_stt_active = tts_lock.is_set()
+                    
+                    if is_stt_active:
+                        # Normal operation: send audio to Deepgram
+                        await connection.send_media(audio_data)
+                    else:
+                        # TTS is playing: discard the audio to prevent feedback loop
+                        # This effectively "drains" the queue while the agent is speaking
+                        pass
                 
                 # Small delay to avoid busy-waiting
                 await asyncio.sleep(0.01)

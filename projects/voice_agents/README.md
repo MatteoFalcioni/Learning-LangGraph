@@ -39,8 +39,6 @@ $ wget ./src/TTS/models https://github.com/thewh1teagle/kokoro-onnx/releases/dow
 
 rename the `.env.example` into `.env` and fill the OPENAI_API_KEY and the DEEPGRAM_API_KEY fields - get your DeepGram API key [here](https://console.deepgram.com/project/4461ac4c-3b39-4821-b312-85b1445b7b03).
 
-Get a DeepGram API key [here](https://developers.deepgram.com/docs/create-additional-api-keys).
-
 You're ready to run the agent. From `projects/voice_agents`, run: 
 
 ```bash

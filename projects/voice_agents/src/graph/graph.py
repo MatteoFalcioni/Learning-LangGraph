@@ -22,22 +22,8 @@ async def make_graph(
     """
     load_dotenv()
 
-    # ======= ARXIV =======
-
-    # grok fast if openrouter is available, otherwise gpt-4.1-mini
-    if os.getenv('OPENROUTER_API_KEY'):
-        # https://openrouter.ai/qwen/qwen3-coder/providers
-        model="x-ai/grok-4.1-fast"
-        arxiv_llm = ChatOpenAI(
-            model=model, 
-            
-            # redirect LangChain to OpenRouter
-            base_url="https://openrouter.ai/api/v1",
-
-            # pass the OpenRouter key
-            api_key=SecretStr(os.environ["OPENROUTER_API_KEY"])
-        )
-    elif os.getenv('OPENAI_API_KEY'):
+    # ======= ARXIV agent =======
+    if os.getenv('OPENAI_API_KEY'):
         model = "gpt-4.1"
         arxiv_llm = ChatOpenAI(model=model)
     else:
