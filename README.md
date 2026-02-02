@@ -10,7 +10,7 @@ Still, the creation of a local virtual environment will be needed later on.
 
 ### Python version
 
-Make sure you're using Python version 3.11, 3.12, or 3.13.
+Make sure you're using Python version >= 3.11
 ```
 python3 --version
 ```
@@ -84,8 +84,11 @@ openai_api_key = os.environ['OPENAI_API_KEY']  # or os.getenv('OPENAI_API_KEY')
 ```
 
 ### Set OpenAI API key
+
+We will be using LLMs APIs during the whole course. We advice you to subscribe to OpenAI in order to have the possibility to use their models in LangChain:
+
 * If you don't have an OpenAI API key, you can sign up [here](https://openai.com/index/openai-api/).
-*  Set `OPENAI_API_KEY` in your environment 
+* Set `OPENAI_API_KEY` in your environment 
 
 ### Sign up and Set LangSmith API
 * Sign up for LangSmith [here](https://docs.langchain.com/langsmith/create-account-api-key#create-an-account-and-api-key), find out more about LangSmith and how to use it within your workflow [here](https://www.langchain.com/langsmith). 
@@ -100,3 +103,41 @@ quick, and persistent search results.
 It's easy to sign up and offers a very generous free tier. Some lessons will use Tavily. 
 
 * Set `TAVILY_API_KEY` in your environment.
+
+### Other API Keys
+
+During the course, we will often suggest the use of other commonly used and very helpful apis, like `OpenRouter`, `Mistral OCR`, `DeepGram`, etc. You can always avoid using these and switch to open source: we will always provide a free alternative.  
+
+### Note on Open Source LLMs (free llms)
+
+Why not use some of the latest free, open source large language models, instead of giving money to OpenAI? 
+
+Well, the problem is usually compute power: these model are large - as their acronym suggets - and we are usually not able to run them locally. Still, if you have a strong enough machine (with a GPU) at your disposal, you can use [Ollama](https://ollama.com/) to use open source models. 
+
+Check out LangChain's Ollama integration [here](https://docs.langchain.com/oss/python/integrations/providers/ollama#model-interfaces). I advice you to experiment during the course with some small local models to see the difference in the results. 
+
+In order to swap the OpenAI models with local models pulled from Ollama, just pull a model from Ollama in your terminal:
+
+```bash 
+$ ollama pull gpt-oss:20b
+```
+
+install the `langchain-ollama` package:
+
+```bash 
+pip install -qU langchain-ollama
+```
+
+and then use `ChatOllama` from LangChain in your code:
+
+```python
+from langchain_ollama import ChatOllama
+
+llm = ChatOllama(
+    model="llama3.1",
+    temperature=0,
+    # other params...
+)
+```
+
+> **Note:** With the constant advance of open source models, you will probably be able to achieve pretty good results with smaller, local models. Of course, if you need the best performance, you will need to use gigantic models (like Claude Opus 4.5, GPT 5, Gemini 3, Kimi K2, and so on).
