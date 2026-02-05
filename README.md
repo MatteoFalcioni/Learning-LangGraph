@@ -105,22 +105,16 @@ We will be using LLMs APIs during the whole course. We advice you to subscribe t
 * Set `OPENAI_API_KEY` in your environment 
 
 ### Sign up and Set LangSmith API
+
+This is a must for debugging LangChain agents. You will not be able to debug without a LangSmith key.
+
 * Sign up for LangSmith [here](https://docs.langchain.com/langsmith/create-account-api-key#create-an-account-and-api-key), find out more about LangSmith and how to use it within your workflow [here](https://www.langchain.com/langsmith). 
 *  Set `LANGSMITH_API_KEY`, `LANGSMITH_TRACING_V2="true"` `LANGSMITH_PROJECT="langchain-academy"`in your environment 
 *  If you are on the EU instance also set `LANGSMITH_ENDPOINT`="https://eu.api.smith.langchain.com" as well.
 
-### Set up Tavily API for web search (Optional, but will be useful later on)
-
-* Tavily Search API is a search engine optimized for LLMs and RAG, aimed at efficient, 
-quick, and persistent search results. 
-* You can sign up for an API key [here](https://tavily.com/). 
-It's easy to sign up and offers a very generous free tier. Some lessons will use Tavily. 
-
-* Set `TAVILY_API_KEY` in your environment.
-
 ### Other API Keys
 
-During the course, we will often suggest the use of other commonly used and very helpful apis, like `OpenRouter`, `Mistral OCR`, `DeepGram`, etc. You can always avoid using these and switch to open source: we will always provide a free alternative.  
+During the course, we will often suggest the use of other commonly used and very helpful apis, like `OpenRouter`, `Mistral OCR`, `DeepGram`, etc. These are not free. You can always avoid using these and switch to open source: we will always provide a free alternative.  
 
 ### Note on Open Source LLMs (free llms)
 
