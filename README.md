@@ -2,6 +2,20 @@
 
 An intermediate-level, comprehensive LangGraph course, focusing on practical use cases. 
 
+## Structure
+
+Find the slides for the course introduction at [`slides/`](./slides/LangGraph-Course.pdf)
+
+The course is divided in two parts: the first part, until notebook #9, teaches you LangGraph / LangChain basics. The second part focuses on more advanced stuff, with some interesting real-use cases. 
+
+<img>
+    <img src="./slides/program.jpg" width=800>
+</img>
+
+The first part of the course uses mainly Jupyter notebooks that you can run locally or in Google Colab. 
+
+The second part still has notebooks that reference the projects' highlights, while those projects are fully implemented in the [`projects/`](./projects/) folder. 
+
 ## Setup
 
 **NOTE:** If your intention is to only work on Google Colab - at least for the first part of the course - you can skip the virtual environment creation and go straight to [setting up env variables](./README.md#setting-up-env-variables). 
